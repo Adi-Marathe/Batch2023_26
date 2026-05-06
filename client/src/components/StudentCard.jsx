@@ -37,7 +37,7 @@ export default function StudentCard({ student, index }) {
     ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
     : nameParts[0][0].toUpperCase();
   const shortName = nameParts.length > 1
-    ? `${nameParts[0]} ${nameParts[nameParts.length - 1][0]}.`
+    ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}`
     : student.name;
 
   return (
