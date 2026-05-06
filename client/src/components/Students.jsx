@@ -6,11 +6,15 @@ import './Students.css';
 export default function Students() {
   const [search, setSearch] = useState('');
 
-  const filtered = studentsData.filter(s =>
-    s.name.toLowerCase().includes(search.toLowerCase()) ||
-    s.rollNo.toLowerCase().includes(search.toLowerCase()) ||
-    s.city.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = studentsData.filter(s => {
+    const term = search.toLowerCase();
+    return (
+      (s.name && String(s.name).toLowerCase().includes(term)) ||
+      (s.rollNo && String(s.rollNo).toLowerCase().includes(term)) ||
+      (s.city && String(s.city).toLowerCase().includes(term)) ||
+      (s.enrollmentNo && String(s.enrollmentNo).toLowerCase().includes(term))
+    );
+  });
 
   return (
     <section className="students" id="students">
