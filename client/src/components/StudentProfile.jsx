@@ -27,7 +27,10 @@ export default function StudentProfile() {
   }
 
   const bgColor = PASTEL_COLORS[student.id % PASTEL_COLORS.length];
-  const initials = student.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+  const nameParts = student.name.split(' ');
+  const initials = nameParts.length > 1 
+    ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+    : nameParts[0][0].toUpperCase();
 
   const fields = [
     { icon: <IoPersonOutline />, label: 'Full Name', value: student.name },

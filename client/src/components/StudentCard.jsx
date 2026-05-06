@@ -32,10 +32,12 @@ export default function StudentCard({ student, index }) {
     return () => observer.disconnect();
   }, [index]);
 
-  const initials = student.name.split(' ').map(n => n[0]).join('').slice(0, 2);
   const nameParts = student.name.split(' ');
-  const shortName = nameParts.length > 2
-    ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}`
+  const initials = nameParts.length > 1 
+    ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+    : nameParts[0][0].toUpperCase();
+  const shortName = nameParts.length > 1
+    ? `${nameParts[0]} ${nameParts[nameParts.length - 1][0]}.`
     : student.name;
 
   return (
