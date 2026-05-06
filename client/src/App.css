@@ -1,0 +1,30 @@
+/* ═══════════════════════════════════════════
+   APP — Main app wrapper styles
+   ═══════════════════════════════════════════ */
+
+.app {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Smooth section transitions */
+.app > section {
+  position: relative;
+}
+
+/* Page transition wrapper */
+.app-content {
+  opacity: 0;
+  animation: pageIn 0.8s ease forwards;
+}
+
+@keyframes pageIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

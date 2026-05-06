@@ -1,0 +1,91 @@
+/* ═══════════════════════════════════════════
+   STAFF — Our Mentors section
+   ═══════════════════════════════════════════ */
+
+.staff {
+  padding: var(--space-2xl) var(--space-lg);
+  position: relative;
+  background: linear-gradient(180deg, var(--bg) 0%, #F0F0FF 100%);
+  min-height: 80vh;
+}
+
+.staff-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.staff-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: var(--navy);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.staff-owl {
+  display: inline-block;
+  animation: owlBob 2s ease-in-out infinite;
+}
+
+@keyframes owlBob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(5deg); }
+}
+
+.staff-title-underline {
+  display: block;
+  margin: 0.3rem auto 0;
+  overflow: visible;
+}
+
+.staff-title-underline path {
+  stroke: var(--gold);
+  stroke-width: 3;
+  fill: none;
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: drawUnderline 1.5s ease forwards 0.5s;
+}
+
+@keyframes drawUnderline {
+  to { stroke-dashoffset: 0; }
+}
+
+.staff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--space-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ══ RESPONSIVE ══ */
+
+@media (max-width: 1024px) {
+  .staff {
+    padding: var(--space-xl) var(--space-md);
+  }
+  .staff-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .staff {
+    padding: var(--space-xl) var(--space-sm);
+  }
+  .staff-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 400px) {
+  .staff-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    max-width: 280px;
+  }
+}

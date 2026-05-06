@@ -1,0 +1,106 @@
+.staff-card {
+  background: white;
+  border: 2.5px solid var(--navy);
+  border-radius: 6px;
+  padding: 14px 14px 20px;
+  cursor: pointer;
+  position: relative;
+  box-shadow: var(--shadow-paper);
+  transition: all 0.35s var(--spring);
+  opacity: 0;
+  transform: translateY(30px);
+}
+.staff-card.visible {
+  opacity: 1;
+  transform: translateY(0) rotate(var(--rotation, 0deg));
+}
+.staff-card-tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55px;
+  height: 22px;
+  background: rgba(244, 185, 66, 0.75);
+  border: 1px solid rgba(26, 26, 46, 0.15);
+  border-radius: 2px;
+  z-index: 2;
+  transition: transform 0.3s var(--spring);
+}
+.staff-card-star {
+  position: absolute;
+  top: -14px;
+  right: -8px;
+  font-size: 1.6rem;
+  z-index: 2;
+  animation: starTwinkle 2s ease-in-out infinite;
+}
+@keyframes starTwinkle {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.15) rotate(15deg); }
+}
+.staff-card-photo {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #E8E0F0, #F0E8D8);
+  border: 1.5px solid rgba(26, 26, 46, 0.08);
+  overflow: hidden;
+}
+.staff-card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.staff-card-initials {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--navy);
+  opacity: 0.5;
+}
+.staff-card-name {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--navy);
+  text-align: center;
+  margin-top: 12px;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.staff-card-subject {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--ink);
+  opacity: 0.6;
+  text-align: center;
+  margin-top: 4px;
+}
+.staff-card:hover {
+  transform: translateY(-6px) rotate(0deg) scale(1.06);
+  box-shadow: 0 8px 24px rgba(27, 42, 74, 0.2);
+  border-color: var(--gold);
+  z-index: 10;
+}
+.staff-card:hover .staff-card-tape {
+  transform: translateX(-50%) rotate(5deg);
+}
+@media (max-width: 768px) {
+  .staff-card { padding: 10px 10px 16px; }
+  .staff-card-tape { width: 42px; height: 18px; top: -9px; }
+  .staff-card-star { font-size: 1.2rem; top: -10px; right: -5px; }
+  .staff-card-initials { font-size: 2rem; }
+  .staff-card-name { font-size: 1rem; margin-top: 8px; }
+  .staff-card-subject { font-size: 0.75rem; }
+}
+@media (max-width: 400px) {
+  .staff-card { padding: 8px 8px 12px; }
+  .staff-card-initials { font-size: 1.8rem; }
+  .staff-card-name { font-size: 0.9rem; }
+}

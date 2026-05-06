@@ -1,0 +1,185 @@
+/* ═══════════════════════════════════════════
+   STUDENT MODAL — Typewriter doodle modal
+   ═══════════════════════════════════════════ */
+
+.student-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.student-modal {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-xl);
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--bg);
+  background-image:
+    linear-gradient(rgba(26, 26, 46, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 26, 46, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+  border: 3px solid var(--ink);
+  border-radius: var(--border-radius-wobbly);
+  padding: var(--space-xl);
+  box-shadow: 8px 10px 30px rgba(26, 26, 46, 0.3);
+}
+
+/* Close button */
+.student-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s var(--spring);
+  background: white;
+  z-index: 10;
+}
+
+.student-modal-close:hover {
+  background: var(--coral);
+  color: white;
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Left: Photo */
+.student-modal-left {
+  flex: 0 0 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.student-modal-polaroid {
+  background: white;
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  padding: 12px 12px 40px;
+  box-shadow: var(--shadow-lifted);
+  transform: rotate(-2deg);
+}
+
+.student-modal-photo {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  border: 1.5px solid rgba(26, 26, 46, 0.08);
+  animation: polaroidDevelop 1s ease forwards;
+}
+
+@keyframes polaroidDevelop {
+  0% {
+    filter: brightness(3) saturate(0);
+    opacity: 0.3;
+  }
+  100% {
+    filter: brightness(1) saturate(1);
+    opacity: 1;
+  }
+}
+
+.student-modal-photo-initials {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--ink);
+  opacity: 0.5;
+}
+
+.student-modal-photo-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  text-align: center;
+  margin-top: 8px;
+  color: var(--ink);
+}
+
+/* Right: Info with typewriter */
+.student-modal-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.student-modal-field {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.6;
+  min-height: 1.6em;
+}
+
+.student-modal-field .field-label {
+  opacity: 0.7;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--coral);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.6s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Floating doodles in modal */
+.student-modal-doodle {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.1;
+  animation: floatDoodle 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes floatDoodle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .student-modal {
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-lg);
+    gap: var(--space-lg);
+  }
+
+  .student-modal-left {
+    flex: none;
+  }
+
+  .student-modal-photo {
+    width: 160px;
+    height: 160px;
+  }
+}
