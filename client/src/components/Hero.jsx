@@ -27,7 +27,7 @@ const POLAROIDS = [
 
 const CONFETTI_COLORS = ['var(--yellow)', 'var(--coral)', 'var(--mint)', 'var(--lavender)', 'var(--sky)'];
 
-const SUBTITLE_TEXT = "2023 – 2026 · 69 Legends";
+const SUBTITLE_TEXT = "2023 – 2026 · We walked in as strangers and are leaving as a family. Relive the best flashbacks and see what makes our batch truly one of a kind.";
 
 const COUNTERS = [
   { target: 69, label: 'Students', suffix: '' },
