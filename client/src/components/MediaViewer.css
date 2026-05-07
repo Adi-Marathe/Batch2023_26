@@ -1,0 +1,228 @@
+/* ==========================================
+   MEDIA VIEWER — full page overlay
+   ========================================== */
+
+.mv-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+}
+
+/* — Top bar — */
+.mv-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 2px solid #ddd;
+  flex-shrink: 0;
+}
+
+.mv-back {
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  background: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.mv-back:hover {
+  background: #e0e0e0;
+}
+
+.mv-title {
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mv-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.mv-act {
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  background: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.mv-act:hover {
+  background: #e0e0e0;
+  color: #111;
+}
+
+.mv-dl {
+  background: #e8f5e9;
+  border-color: #a5d6a7;
+  color: #2e7d32;
+}
+.mv-dl:hover {
+  background: #c8e6c9;
+}
+
+.mv-zoom-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  min-width: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.mv-counter {
+  font-size: 13px;
+  color: #999;
+  padding-left: 8px;
+  font-weight: 500;
+}
+
+/* — Media area — */
+.mv-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 0;
+  position: relative;
+  background: #111;
+}
+
+.mv-stage {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 60px;
+  overflow: hidden;
+}
+
+.mv-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+}
+
+.mv-vid {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 4px;
+}
+
+.mv-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #aaa;
+  font-size: 18px;
+}
+
+/* Arrows */
+.mv-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  font-size: 32px;
+  font-weight: 300;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.mv-arrow:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+.mv-arrow-l { left: 12px; }
+.mv-arrow-r { right: 12px; }
+
+/* — Thumbnail strip — */
+.mv-thumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #fff;
+  border-top: 2px solid #ddd;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.mv-th {
+  flex-shrink: 0;
+  width: 60px;
+  height: 44px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mv-th img,
+.mv-th video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.mv-th:hover {
+  border-color: #888;
+}
+.mv-th-active {
+  border-color: #7c4dff;
+  box-shadow: 0 0 8px rgba(124, 77, 255, 0.5);
+}
+
+/* — Responsive — */
+@media (max-width: 768px) {
+  .mv-topbar { padding: 8px 10px; gap: 8px; }
+  .mv-back { padding: 6px 10px; font-size: 13px; }
+  .mv-title { font-size: 14px; }
+  .mv-act { padding: 5px 8px; font-size: 12px; }
+  .mv-stage { padding: 10px 50px; }
+  .mv-arrow { width: 36px; height: 36px; font-size: 22px; }
+  .mv-arrow-l { left: 6px; }
+  .mv-arrow-r { right: 6px; }
+  .mv-th { width: 48px; height: 36px; }
+}
+
+@media (max-width: 480px) {
+  .mv-back span { display: none; }
+  .mv-zoom-val { display: none; }
+  .mv-stage { padding: 8px 40px; }
+  .mv-arrow { width: 30px; height: 30px; font-size: 18px; }
+}

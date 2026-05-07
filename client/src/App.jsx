@@ -9,6 +9,7 @@ import Memories from './components/Memories';
 import Footer from './components/Footer';
 import StudentProfile from './components/StudentProfile';
 import StaffProfile from './components/StaffProfile';
+import MediaViewer from './components/MediaViewer';
 import './App.css';
 
 function HomePage() {
@@ -41,6 +42,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/student/:id" element={<StudentProfile />} />
             <Route path="/staff/:id" element={<StaffProfile />} />
+            <Route path="/flashback/:id" element={<MediaViewer />} />
           </Routes>
         </div>
       )}
