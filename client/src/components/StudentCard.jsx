@@ -50,7 +50,12 @@ export default function StudentCard({ student, index }) {
       <div className="student-card-tape" />
       <div className="student-card-photo" style={{ background: bgColor }}>
         {student.photo ? (
-          <img src={student.photo} alt={student.name} />
+          <img 
+            src={student.photo} 
+            alt={student.name} 
+            loading="lazy" 
+            decoding="async"
+          />
         ) : (
           <span className="student-card-initials">{initials}</span>
         )}
