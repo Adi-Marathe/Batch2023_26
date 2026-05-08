@@ -78,7 +78,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
             </button>
             
             <div className="login-modal-header">
-              <h2>Unlock Student Profile 🔑</h2>
+              <h2>Unlock Student Profile</h2>
               <p>Verify your identity to access and edit your personal scrapbook.</p>
             </div>
             
