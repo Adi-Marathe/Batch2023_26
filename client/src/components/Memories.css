@@ -33,8 +33,8 @@
   padding: var(--space-sm) 0;
   will-change: transform;
 }
-.filmstrip-row-1 { animation: scrollLeft 30s linear infinite; }
-.filmstrip-row-2 { animation: scrollRight 35s linear infinite; margin-top: var(--space-md); }
+.filmstrip-row-1 { animation: scrollLeft 48s linear infinite; }
+.filmstrip-row-2 { animation: scrollRight 55s linear infinite; margin-top: var(--space-md); }
 .filmstrip-container:hover .filmstrip-row {
   animation-play-state: paused;
 }

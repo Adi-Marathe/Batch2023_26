@@ -58,11 +58,16 @@ const FilmstripItem = memo(({ m, openViewer, bg }) => {
           <span className="filmstrip-item-placeholder-text">{m.title}</span>
         </div>
       ) : m.type === 'video' ? (
-        // Static video card — no <video> element = no network request in filmstrip
-        <div className="filmstrip-video-thumb">
-          <span className="filmstrip-video-icon">▶</span>
-          <span className="filmstrip-video-label">{m.title}</span>
-        </div>
+        // preload="none" = no download until in-view; autoPlay only when visible
+        <video
+          src={m.media}
+          className="filmstrip-item-img"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
+        />
       ) : m.media ? (
         <img
           src={m.media}
