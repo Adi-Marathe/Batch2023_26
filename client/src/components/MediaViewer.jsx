@@ -64,14 +64,24 @@ export default function MediaViewer() {
 
   const download = async () => {
     if (!item.media) return;
+    
     if (!isLoggedIn) {
-      toast('Login to save this memory! 📸', { icon: '🔒' });
+      toast('Unlock your profile to save this memory! 🔒', { 
+        icon: '🔑',
+        style: {
+          borderRadius: '10px',
+          background: 'var(--ink)',
+          color: '#fff',
+        },
+      });
       return;
     }
     
+    const toastId = toast.loading('Preparing your memory... ⏳');
+    
     try {
-      toast.loading('Downloading memory...', { id: 'dl' });
       const r = await fetch(item.media);
+      if (!r.ok) throw new Error('Download failed');
       const b = await r.blob();
       const u = URL.createObjectURL(b);
       const a = document.createElement('a');
@@ -79,10 +89,11 @@ export default function MediaViewer() {
       a.download = item.title.replace(/[^a-z0-9]/gi, '_') + (isVid ? '.mp4' : '.png');
       a.click();
       URL.revokeObjectURL(u);
-      toast.success('Memory saved successfully! 🎉', { id: 'dl' });
-    } catch { 
+      toast.success('Memory saved successfully! 🎉', { id: toastId });
+    } catch (err) { 
+      console.error(err);
       window.open(item.media, '_blank'); 
-      toast.success('Opened media in new tab! 🎉', { id: 'dl' });
+      toast.error('Could not auto-download, opened in new tab instead!', { id: toastId });
     }
   };
 
@@ -110,7 +121,11 @@ export default function MediaViewer() {
               </button>
             </>
           )}
-          {item.media && <button className="mv-act mv-dl" onClick={download}>⬇ Download</button>}
+          {item.media && (
+            <button className="mv-act mv-dl" onClick={download} title="Save to device">
+              ⬇ Download
+            </button>
+          )}
           <span className="mv-counter">{idx + 1}/{MEMORIES.length}</span>
         </div>
       </div>

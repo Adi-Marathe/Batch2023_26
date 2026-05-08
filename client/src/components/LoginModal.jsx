@@ -78,8 +78,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
             </button>
             
             <div className="login-modal-header">
-              <h2>Unlock Memories</h2>
-              <p>Squad members only. Enter your credentials.</p>
+              <h2>Unlock Student Profile 🔑</h2>
+              <p>Verify your identity to access and edit your personal scrapbook.</p>
             </div>
             
             <form onSubmit={handleSubmit} className="login-form">
@@ -108,7 +108,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                 className={`login-btn ${loading ? 'loading' : ''}`}
                 disabled={loading}
               >
-                {loading ? 'Unlocking...' : 'Unlock Squad Access'}
+                {loading ? 'Unlocking...' : 'Unlock Profile'}
               </button>
             </form>
           </motion.div>
