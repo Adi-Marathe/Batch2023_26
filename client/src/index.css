@@ -177,3 +177,11 @@ ul, ol {
     font-size: 13px;
   }
 }
+
+/* Anti-screenshot mode */
+.blur-mode {
+  filter: blur(15px) grayscale(100%);
+  pointer-events: none;
+  user-select: none;
+  transition: filter 0.1s;
+}

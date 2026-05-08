@@ -45,12 +45,34 @@ export default function App() {
       }
     };
 
+    // Anti-screenshot (blur when window loses focus e.g. Snipping tool opened)
+    const handleBlur = () => {
+      document.body.classList.add('blur-mode');
+    };
+    
+    const handleFocus = () => {
+      document.body.classList.remove('blur-mode');
+    };
+
+    // Attempt to clear clipboard on PrintScreen
+    const handleKeyUp = (e) => {
+      if (e.key === 'PrintScreen') {
+        navigator.clipboard.writeText(''); // Attempt to clear
+      }
+    };
+
     document.addEventListener('contextmenu', handleContextMenu);
     document.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('blur', handleBlur);
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('keyup', handleKeyUp);
 
     return () => {
       document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('blur', handleBlur);
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
 
