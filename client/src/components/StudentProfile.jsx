@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { IoCalendarOutline, IoLocationOutline, IoChatbubbleOutline, IoRocketOutline, IoPersonOutline, IoDocumentTextOutline, IoCardOutline } from 'react-icons/io5';
 import studentsData from '../data/students';
+import EditProfileModal from './EditProfileModal';
 import './StudentProfile.css';
 
 const PASTEL_COLORS = [
@@ -15,6 +17,23 @@ export default function StudentProfile() {
   const { id } = useParams();
 
   const student = studentsData.find(s => s.id === Number(id));
+
+  const [profileData, setProfileData] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
+  const loggedInUserEnrollmentNo = localStorage.getItem('userEnrollmentNo');
+  const canEdit = student && loggedInUserEnrollmentNo === student.enrollmentNo;
+
+  useEffect(() => {
+    if (student && student.enrollmentNo) {
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/students/${student.enrollmentNo}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data) setProfileData(data);
+        })
+        .catch(err => console.error(err));
+    }
+  }, [student]);
 
   if (!student) {
     return (
@@ -36,10 +55,12 @@ export default function StudentProfile() {
     { icon: <IoPersonOutline />, label: 'Full Name', value: student.name },
     { icon: <IoDocumentTextOutline />, label: 'Roll Number', value: student.rollNo },
     ...(student.enrollmentNo ? [{ icon: <IoCardOutline />, label: 'Enrollment No', value: student.enrollmentNo }] : []),
-    { icon: <IoCalendarOutline />, label: 'Date of Birth', value: student.dob },
-    { icon: <IoLocationOutline />, label: 'City', value: student.city },
-    { icon: <IoChatbubbleOutline />, label: 'Favourite Quote', value: `"${student.quote}"`, isQuote: true },
-    { icon: <IoRocketOutline />, label: 'Dream', value: student.dream },
+    { icon: <IoCalendarOutline />, label: 'Date of Birth', value: profileData?.dob || 'Still calculating their age 🧮' },
+    { icon: <IoLocationOutline />, label: 'City', value: profileData?.city || student.city || 'Lost in the wilderness 🏕️' },
+    { icon: <IoChatbubbleOutline />, label: 'Core Memory', value: profileData?.coreMemory || 'Brain empty, no thoughts 🫥' },
+    { icon: <IoRocketOutline />, label: 'Current Status', value: profileData?.currentStatus || 'Sleeping in class 😴' },
+    { icon: <IoRocketOutline />, label: 'Dream', value: profileData?.dream || student.dream || 'To survive the next semester 😅' },
+    { icon: <IoChatbubbleOutline />, label: 'College Life in 3 Emojis', value: profileData?.emojis || '🤷‍♂️🤷‍♀️🤷' },
   ];
 
   return (
@@ -57,6 +78,15 @@ export default function StudentProfile() {
             </div>
           </div>
           <p className="student-profile-name-under-photo">{student.name}</p>
+          {canEdit && (
+            <button 
+              className="student-modal-edit-btn" 
+              style={{ marginTop: '1rem' }}
+              onClick={() => setIsEditModalOpen(true)}
+            >
+              ✏️ Edit Profile
+            </button>
+          )}
         </div>
 
         <div className="student-profile-right">
@@ -73,6 +103,14 @@ export default function StudentProfile() {
           </div>
         </div>
       </div>
+
+      <EditProfileModal 
+        isOpen={isEditModalOpen} 
+        onClose={() => setIsEditModalOpen(false)} 
+        student={student} 
+        profileData={profileData} 
+        onSaveSuccess={(newData) => setProfileData(newData)}
+      />
     </div>
   );
 }

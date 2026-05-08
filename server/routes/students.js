@@ -1,23 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const Student = require('../models/Student');
+const StudentProfile = require('../models/Student');
 
-// GET all students
-router.get('/', async (req, res) => {
+// GET student profile by enrollmentNo
+router.get('/:enrollmentNo', async (req, res) => {
   try {
-    const students = await Student.find().sort({ rollNo: 1 });
-    res.json(students);
+    const profile = await StudentProfile.findOne({ enrollmentNo: req.params.enrollmentNo });
+    if (!profile) return res.json(null); // Return null so frontend knows there is no profile yet
+    res.json(profile);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// GET single student by ID
-router.get('/:id', async (req, res) => {
+// PUT update student profile
+router.put('/:enrollmentNo', async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id);
-    if (!student) return res.status(404).json({ message: 'Student not found' });
-    res.json(student);
+    const { dob, city, coreMemory, currentStatus, dream, emojis } = req.body;
+    
+    let profile = await StudentProfile.findOne({ enrollmentNo: req.params.enrollmentNo });
+    if (!profile) {
+      profile = new StudentProfile({
+        enrollmentNo: req.params.enrollmentNo,
+        dob, city, coreMemory, currentStatus, dream, emojis
+      });
+    } else {
+      profile.dob = dob !== undefined ? dob : profile.dob;
+      profile.city = city !== undefined ? city : profile.city;
+      profile.coreMemory = coreMemory !== undefined ? coreMemory : profile.coreMemory;
+      profile.currentStatus = currentStatus !== undefined ? currentStatus : profile.currentStatus;
+      profile.dream = dream !== undefined ? dream : profile.dream;
+      profile.emojis = emojis !== undefined ? emojis : profile.emojis;
+    }
+    
+    await profile.save();
+    res.json({ success: true, profile });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

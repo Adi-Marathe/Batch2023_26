@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 import './StudentModal.css';
 
 const PASTEL_COLORS = [
@@ -22,21 +23,63 @@ export default function StudentModal({ student, onClose }) {
   const [currentFieldIndex, setCurrentFieldIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
+  
+  // Custom Profile Data
+  const [profileData, setProfileData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  
+  const loggedInUserEnrollmentNo = localStorage.getItem('userEnrollmentNo');
+  const canEdit = loggedInUserEnrollmentNo === student.enrollmentNo;
+
+  const [formData, setFormData] = useState({
+    dob: '',
+    city: '',
+    coreMemory: '',
+    currentStatus: '',
+    dream: student.dream || '',
+    emojis: ''
+  });
 
   const bgColor = PASTEL_COLORS[student.id % PASTEL_COLORS.length];
   const initials = student.name.split(' ').map(n => n[0]).join('').slice(0, 2);
 
+  // Fetch profile
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/students/${student.enrollmentNo}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          setProfileData(data);
+          setFormData({
+            dob: data.dob || '',
+            city: data.city || student.city || '',
+            coreMemory: data.coreMemory || '',
+            currentStatus: data.currentStatus || '',
+            dream: data.dream || student.dream || '',
+            emojis: data.emojis || ''
+          });
+        }
+      })
+      .catch(err => console.error(err));
+  }, [student.enrollmentNo]);
+
+  // Derived fields to display
   const fields = [
     { label: '✏️ Name:', value: student.name },
     { label: '📋 Roll No:', value: student.rollNo },
-    { label: '🎂 DOB:', value: student.dob },
-    { label: '📍 City:', value: student.city },
-    { label: '💭 Quote:', value: `"${student.quote}"` },
-    { label: '🎯 Dream:', value: student.dream },
+    { label: '🎂 DOB:', value: profileData?.dob || 'Still calculating their age 🧮' },
+    { label: '📍 City:', value: profileData?.city || student.city || 'Lost in the wilderness 🏕️' },
+    { label: '✨ Core Memory:', value: profileData?.coreMemory || 'Brain empty, no thoughts 🫥' },
+    { label: '🚀 Status:', value: profileData?.currentStatus || 'Sleeping in class 😴' },
+    { label: '🎯 Dream:', value: profileData?.dream || student.dream || 'To survive the next semester 😅' },
+    { label: '🤪 3 Emojis:', value: profileData?.emojis || '🤷‍♂️🤷‍♀️🤷' }
   ];
 
   // Typewriter effect
   useEffect(() => {
+    if (isEditing) return;
+    
     if (currentFieldIndex >= fields.length) {
       setShowCursor(false);
       return;
@@ -59,7 +102,7 @@ export default function StudentModal({ student, onClose }) {
     }, 30);
 
     return () => clearInterval(interval);
-  }, [currentFieldIndex]);
+  }, [currentFieldIndex, isEditing, fields]);
 
   // Close on Escape
   const handleKeyDown = useCallback((e) => {
@@ -79,6 +122,48 @@ export default function StudentModal({ student, onClose }) {
     if (e.target === e.currentTarget) onClose();
   };
 
+  const handleSave = async (e) => {
+    e.preventDefault();
+
+    if (formData.emojis) {
+      if (/[a-zA-Z0-9]/.test(formData.emojis)) {
+        toast.error('Only emojis allowed! No text. 🛑');
+        return;
+      }
+      const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
+      const segments = Array.from(segmenter.segment(formData.emojis.trim()));
+      if (segments.length !== 3) {
+        toast.error('Please enter EXACTLY 3 emojis! 🥺');
+        return;
+      }
+    }
+
+    setSaving(true);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/students/${student.enrollmentNo}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if (data.success) {
+        setProfileData(data.profile);
+        toast.success('Profile updated!');
+        setIsEditing(false);
+        setTypedFields([]);
+        setCurrentFieldIndex(0);
+        setCurrentText('');
+        setShowCursor(true);
+      } else {
+        toast.error('Failed to update');
+      }
+    } catch (err) {
+      toast.error('Connection error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <AnimatePresence>
       <motion.div
@@ -96,20 +181,14 @@ export default function StudentModal({ student, onClose }) {
           exit={{ scale: 0.7, opacity: 0, rotate: 3 }}
           transition={{ type: 'spring', damping: 20, stiffness: 300 }}
         >
-          {/* Floating doodles */}
           {MODAL_DOODLES.map((d, i) => (
-            <span
-              key={i}
-              className="student-modal-doodle"
-              style={{ ...d }}
-            >
+            <span key={i} className="student-modal-doodle" style={{ ...d }}>
               {d.emoji}
             </span>
           ))}
 
           <button className="student-modal-close" onClick={onClose}>✕</button>
 
-          {/* Left: Polaroid photo */}
           <div className="student-modal-left">
             <div className="student-modal-polaroid">
               <div className="student-modal-photo" style={{ background: bgColor }}>
@@ -121,20 +200,58 @@ export default function StudentModal({ student, onClose }) {
               </div>
             </div>
             <p className="student-modal-photo-name">{student.name}</p>
+            {canEdit && !isEditing && (
+              <button className="student-modal-edit-btn" onClick={() => setIsEditing(true)}>
+                ✏️ Edit Profile
+              </button>
+            )}
           </div>
 
-          {/* Right: Typewriter info */}
           <div className="student-modal-right">
-            {typedFields.map((text, i) => (
-              <div key={i} className="student-modal-field">
-                {text}
-              </div>
-            ))}
-            {currentFieldIndex < fields.length && (
-              <div className="student-modal-field">
-                {currentText}
-                {showCursor && <span className="typewriter-cursor" />}
-              </div>
+            {isEditing ? (
+              <form className="student-modal-edit-form" onSubmit={handleSave}>
+                <h3>Update Your Profile</h3>
+                <div className="form-group">
+                  <label>Date of Birth</label>
+                  <input type="text" maxLength={20} placeholder="e.g. 15 Dec 2004" value={formData.dob} onChange={e => setFormData({...formData, dob: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label>City</label>
+                  <input type="text" maxLength={30} placeholder="e.g. Mumbai" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label>Core Memory</label>
+                  <input type="text" maxLength={60} placeholder="Best moment..." value={formData.coreMemory} onChange={e => setFormData({...formData, coreMemory: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label>Current Status</label>
+                  <input type="text" maxLength={40} placeholder="e.g. Learning React" value={formData.currentStatus} onChange={e => setFormData({...formData, currentStatus: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label>Dream</label>
+                  <input type="text" maxLength={40} placeholder="Your dream..." value={formData.dream} onChange={e => setFormData({...formData, dream: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label>College Life in 3 Emojis</label>
+                  <input type="text" maxLength={10} placeholder="💻☕😴" value={formData.emojis} onChange={e => setFormData({...formData, emojis: e.target.value})} />
+                </div>
+                <div className="form-actions">
+                  <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
+                  <button type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save'}</button>
+                </div>
+              </form>
+            ) : (
+              <>
+                {typedFields.map((text, i) => (
+                  <div key={i} className="student-modal-field">{text}</div>
+                ))}
+                {currentFieldIndex < fields.length && (
+                  <div className="student-modal-field">
+                    {currentText}
+                    {showCursor && <span className="typewriter-cursor" />}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </motion.div>

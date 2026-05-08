@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MEMORIES } from '../data/memories';
+import { toast } from 'react-hot-toast';
 import './MediaViewer.css';
 
 export default function MediaViewer() {
@@ -15,6 +16,7 @@ export default function MediaViewer() {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const isLoggedIn = !!localStorage.getItem('token');
 
   const item = MEMORIES[idx];
   const isVid = item?.type === 'video';
@@ -62,7 +64,13 @@ export default function MediaViewer() {
 
   const download = async () => {
     if (!item.media) return;
+    if (!isLoggedIn) {
+      toast('Login to save this memory! 📸', { icon: '🔒' });
+      return;
+    }
+    
     try {
+      toast.loading('Downloading memory...', { id: 'dl' });
       const r = await fetch(item.media);
       const b = await r.blob();
       const u = URL.createObjectURL(b);
@@ -71,7 +79,11 @@ export default function MediaViewer() {
       a.download = item.title.replace(/[^a-z0-9]/gi, '_') + (isVid ? '.mp4' : '.png');
       a.click();
       URL.revokeObjectURL(u);
-    } catch { window.open(item.media, '_blank'); }
+      toast.success('Memory saved successfully! 🎉', { id: 'dl' });
+    } catch { 
+      window.open(item.media, '_blank'); 
+      toast.success('Opened media in new tab! 🎉', { id: 'dl' });
+    }
   };
 
   return (
@@ -107,13 +119,28 @@ export default function MediaViewer() {
       <div className="mv-body">
         <button className="mv-arrow mv-arrow-l" onClick={prev}>‹</button>
 
-        <div className="mv-stage">
+        <div 
+          className="mv-stage" 
+          onContextMenu={(e) => {
+            if (!isLoggedIn) {
+              e.preventDefault();
+              toast.error('Inspect/Save disabled for guests!');
+            }
+          }}
+          onDragStart={(e) => {
+            if (!isLoggedIn) e.preventDefault();
+          }}
+        >
           {item.media && !isVid && (
             <img
               src={item.media}
               alt={item.title}
               className="mv-img"
-              style={{ transform: `scale(${zoom})` }}
+              style={{ 
+                transform: `scale(${zoom})`, 
+                pointerEvents: isLoggedIn ? 'auto' : 'none',
+                userSelect: 'none'
+              }}
               draggable={false}
             />
           )}
@@ -123,11 +150,15 @@ export default function MediaViewer() {
               src={item.media}
               className="mv-vid"
               controls
+              controlsList={isLoggedIn ? "" : "nodownload"}
               autoPlay
               onClick={togglePlay}
               onEnded={() => setPlaying(false)}
               onPlay={() => setPlaying(true)}
               onPause={() => setPlaying(false)}
+              style={{
+                pointerEvents: isLoggedIn ? 'auto' : 'none'
+              }}
             />
           )}
           {!item.media && (

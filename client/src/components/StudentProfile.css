@@ -165,6 +165,31 @@
 }
 .student-profile-notfound h2 { font-family: var(--font-display); font-size: 2rem; }
 
+.student-modal-edit-btn {
+  background: var(--bg);
+  border: 2px solid var(--ink);
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--ink);
+  transition: all 0.2s var(--spring);
+}
+
+.student-modal-edit-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--coral);
+  border-color: var(--coral);
+  color: var(--coral);
+}
+
+.student-modal-edit-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 var(--coral);
+}
+
 /* ══ TABLET ══ */
 @media (max-width: 1024px) {
   .student-profile-polaroid { padding: 12px 12px 36px; }
