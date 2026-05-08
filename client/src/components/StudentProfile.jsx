@@ -20,7 +20,14 @@ export default function StudentProfile() {
 
   const [profileData, setProfileData] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [authTrigger, setAuthTrigger] = useState(0);
   
+  useEffect(() => {
+    const handleAuth = () => setAuthTrigger(prev => prev + 1);
+    window.addEventListener('authChange', handleAuth);
+    return () => window.removeEventListener('authChange', handleAuth);
+  }, []);
+
   const loggedInUserEnrollmentNo = localStorage.getItem('userEnrollmentNo');
   const canEdit = student && loggedInUserEnrollmentNo === student.enrollmentNo;
 

@@ -28,6 +28,13 @@ export default function StudentModal({ student, onClose }) {
   const [profileData, setProfileData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [authTrigger, setAuthTrigger] = useState(0);
+
+  useEffect(() => {
+    const handleAuth = () => setAuthTrigger(prev => prev + 1);
+    window.addEventListener('authChange', handleAuth);
+    return () => window.removeEventListener('authChange', handleAuth);
+  }, []);
   
   const loggedInUserEnrollmentNo = localStorage.getItem('userEnrollmentNo');
   const canEdit = loggedInUserEnrollmentNo === student.enrollmentNo;

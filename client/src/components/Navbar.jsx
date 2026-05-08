@@ -70,6 +70,7 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userEnrollmentNo');
+    window.dispatchEvent(new Event('authChange'));
     setIsLoggedIn(false);
     setLoggedInUser(null);
     setProfileMenuOpen(false);

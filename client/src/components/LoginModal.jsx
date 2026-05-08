@@ -38,6 +38,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
       if (data.success) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userEnrollmentNo', enrollmentNo);
+        window.dispatchEvent(new Event('authChange'));
         toast.success(data.message);
         onLoginSuccess(enrollmentNo);
         onClose();
