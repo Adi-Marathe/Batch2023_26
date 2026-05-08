@@ -77,7 +77,8 @@
   font-weight: 600;
 }
 
-.login-form input {
+.login-form input,
+.login-form textarea {
   width: 100%;
   padding: 0.8rem 1rem;
   border-radius: 8px;
@@ -89,7 +90,8 @@
   transition: all 0.2s var(--spring);
 }
 
-.login-form input:focus {
+.login-form input:focus,
+.login-form textarea:focus {
   outline: none;
   border-color: var(--lavender);
   box-shadow: 4px 4px 0 var(--lavender);

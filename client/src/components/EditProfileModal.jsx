@@ -145,34 +145,37 @@ export default function EditProfileModal({ isOpen, onClose, student, profileData
 
                 <div className="form-group" style={{ marginBottom: '1rem' }}>
                   <label>Core Memory</label>
-                  <input
-                    type="text"
-                    maxLength={60}
+                  <textarea
+                    maxLength={500}
+                    rows={3}
                     value={formData.coreMemory}
                     onChange={(e) => setFormData({...formData, coreMemory: e.target.value})}
-                    placeholder="Best moment..."
+                    placeholder="Describe your favorite memory from these 3 years..."
+                    style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '2px solid var(--ink)', fontFamily: 'inherit', resize: 'vertical' }}
                   />
                 </div>
 
                 <div className="form-group" style={{ marginBottom: '1rem' }}>
                   <label>Current Status</label>
-                  <input
-                    type="text"
-                    maxLength={40}
+                  <textarea
+                    maxLength={300}
+                    rows={2}
                     value={formData.currentStatus}
                     onChange={(e) => setFormData({...formData, currentStatus: e.target.value})}
-                    placeholder="e.g. Learning React"
+                    placeholder="What are you up to these days?"
+                    style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '2px solid var(--ink)', fontFamily: 'inherit', resize: 'vertical' }}
                   />
                 </div>
 
                 <div className="form-group" style={{ marginBottom: '1rem' }}>
                   <label>Dream</label>
-                  <input
-                    type="text"
-                    maxLength={40}
+                  <textarea
+                    maxLength={300}
+                    rows={2}
                     value={formData.dream}
                     onChange={(e) => setFormData({...formData, dream: e.target.value})}
-                    placeholder="Your dream..."
+                    placeholder="What's your ultimate goal?"
+                    style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '2px solid var(--ink)', fontFamily: 'inherit', resize: 'vertical' }}
                   />
                 </div>
 

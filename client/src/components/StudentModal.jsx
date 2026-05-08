@@ -228,15 +228,33 @@ export default function StudentModal({ student, onClose }) {
                 </div>
                 <div className="form-group">
                   <label>Core Memory</label>
-                  <input type="text" maxLength={60} placeholder="Best moment..." value={formData.coreMemory} onChange={e => setFormData({...formData, coreMemory: e.target.value})} />
+                  <textarea 
+                    maxLength={500} 
+                    rows={3}
+                    placeholder="Best moment..." 
+                    value={formData.coreMemory} 
+                    onChange={e => setFormData({...formData, coreMemory: e.target.value})} 
+                  />
                 </div>
                 <div className="form-group">
                   <label>Current Status</label>
-                  <input type="text" maxLength={40} placeholder="e.g. Learning React" value={formData.currentStatus} onChange={e => setFormData({...formData, currentStatus: e.target.value})} />
+                  <textarea 
+                    maxLength={300} 
+                    rows={2}
+                    placeholder="e.g. Learning React" 
+                    value={formData.currentStatus} 
+                    onChange={e => setFormData({...formData, currentStatus: e.target.value})} 
+                  />
                 </div>
                 <div className="form-group">
                   <label>Dream</label>
-                  <input type="text" maxLength={40} placeholder="Your dream..." value={formData.dream} onChange={e => setFormData({...formData, dream: e.target.value})} />
+                  <textarea 
+                    maxLength={300} 
+                    rows={2}
+                    placeholder="Your dream..." 
+                    value={formData.dream} 
+                    onChange={e => setFormData({...formData, dream: e.target.value})} 
+                  />
                 </div>
                 <div className="form-group">
                   <label>College Life in 3 Emojis</label>
