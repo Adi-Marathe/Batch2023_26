@@ -30,6 +30,7 @@ import AdityaMarathe from '../assets/images/Friends/Aditya Marathe/Aditya Marath
 import TejasMhaske from '../assets/images/Friends/Tejas Mhaske/Tejas Mhaske 1.png';
 import YashMule from '../assets/images/Friends/Yash Mule/Yash Mule 1.png';
 import OmNalawade from '../assets/images/Friends/Om Nalawade/Om Nalawade 1.jpeg';
+import SakshiNalawade from '../assets/images/Friends/Sakshi Nalawade/Sakshi Nalawade 1.jpeg';
 import SarthikiNikam from '../assets/images/Friends/Sarthiki Nikam/Sarthiki Nikam 1.jpeg';
 import ShrutiPagare from '../assets/images/Friends/Shruti Pagare/Shruti Pagare 1.jpeg';
 import OmkarPawar from '../assets/images/Friends/Omkar Pawar/Omkar Pawar 1.png';
@@ -92,7 +93,7 @@ const students = [
   { id: 25, name: "Tejas Vilas Mhaske", rollNo: 25, enrollmentNo: "23511690150", photo: TejasMhaske },
   { id: 26, name: "Yash Rajesh Mule", rollNo: 26, enrollmentNo: "23511690151", photo: YashMule },
   { id: 27, name: "Om Sukhdev Nalawade", rollNo: 27, enrollmentNo: "23511690152", photo: OmNalawade },
-  { id: 28, name: "Sakshi Bhagwan Nalawade", rollNo: 28, enrollmentNo: "23511690153", photo: "" },
+  { id: 28, name: "Sakshi Bhagwan Nalawade", rollNo: 28, enrollmentNo: "23511690153", photo: SakshiNalawade },
   { id: 29, name: "Anushka Apparao Nikam", rollNo: 29, enrollmentNo: "23511690155", photo: AnushkaNikam },
   { id: 30, name: "Sarthiki Arvind Nikam", rollNo: 30, enrollmentNo: "23511690156", photo: SarthikiNikam },
   { id: 31, name: "Shruti Bhausaheb Pagare", rollNo: 31, enrollmentNo: "23511690157", photo: ShrutiPagare },
