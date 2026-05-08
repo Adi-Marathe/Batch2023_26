@@ -1,16 +1,14 @@
 .student-profile {
   min-height: 100vh;
   min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   position: relative;
   background-color: var(--bg);
   background-image:
     linear-gradient(rgba(26, 26, 46, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(26, 26, 46, 0.04) 1px, transparent 1px);
   background-size: 28px 28px;
-  padding: calc(var(--navbar-h) + 2rem) 0 3rem;
+  padding: 100px 0 3rem;
+  overflow-y: auto;
 }
 .student-profile-content {
   display: flex;

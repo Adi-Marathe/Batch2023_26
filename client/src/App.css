@@ -16,6 +16,10 @@
 .app-content {
   opacity: 0;
   animation: pageIn 0.8s ease forwards;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: visible;
 }
 
 @keyframes pageIn {
