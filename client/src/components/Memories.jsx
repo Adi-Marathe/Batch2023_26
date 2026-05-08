@@ -30,8 +30,9 @@ export default function Memories() {
   const [bannerVisible, setBannerVisible] = useState(false);
   const bannerRef = useRef(null);
 
-  const row1 = [...MEMORIES.slice(0, 10), ...MEMORIES.slice(0, 10)];
-  const row2 = [...MEMORIES.slice(10, 20), ...MEMORIES.slice(10, 20)];
+  const half = Math.ceil(MEMORIES.length / 2);
+  const row1 = [...MEMORIES.slice(0, half), ...MEMORIES.slice(0, half)];
+  const row2 = [...MEMORIES.slice(half), ...MEMORIES.slice(half)];
 
   useEffect(() => {
     const obs = new IntersectionObserver(

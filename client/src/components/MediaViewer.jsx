@@ -9,6 +9,20 @@ export default function MediaViewer() {
   const navigate = useNavigate();
   
   // Find current index based on URL
+  if (MEMORIES.length === 0) {
+    return (
+      <div className="mv-overlay">
+        <div className="mv-topbar">
+          <button className="mv-back" onClick={() => navigate('/#memories')}>← Back to Home</button>
+        </div>
+        <div className="mv-body" style={{ color: 'white', flexDirection: 'column', gap: '1rem' }}>
+           <h3>No memories found</h3>
+           <p>Start by adding new fresh things! ✨</p>
+        </div>
+      </div>
+    );
+  }
+
   const currentIndex = MEMORIES.findIndex((m) => m.id === parseInt(id, 10));
   const idx = currentIndex !== -1 ? currentIndex : 0;
   
