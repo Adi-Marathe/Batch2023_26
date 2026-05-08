@@ -30,7 +30,7 @@ import AdityaMarathe from '../assets/images/Friends/Aditya Marathe/Aditya Marath
 import TejasMhaske from '../assets/images/Friends/Tejas Mhaske/Tejas Mhaske 1.png';
 import YashMule from '../assets/images/Friends/Yash Mule/Yash Mule 1.png';
 import OmNalawade from '../assets/images/Friends/Om Nalawade/Om Nalawade 1.jpeg';
-import SakshiNalawade from '../assets/images/Friends/Sakshi Nalawade/Sakshi Nalawade.jpeg';
+import SakshiNalawade from '../assets/images/Friends/Sakshi Nalawade/Sakshi Nalawade.jpg';
 import SarthikiNikam from '../assets/images/Friends/Sarthiki Nikam/Sarthiki Nikam 1.jpeg';
 import ShrutiPagare from '../assets/images/Friends/Shruti Pagare/Shruti Pagare 1.jpeg';
 import OmkarPawar from '../assets/images/Friends/Omkar Pawar/Omkar Pawar 1.png';
