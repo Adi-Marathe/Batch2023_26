@@ -62,12 +62,12 @@ export default function StudentProfile() {
     { icon: <IoPersonOutline />, label: 'Full Name', value: student.name },
     { icon: <IoDocumentTextOutline />, label: 'Roll Number', value: student.rollNo },
     ...(student.enrollmentNo ? [{ icon: <IoCardOutline />, label: 'Enrollment No', value: student.enrollmentNo }] : []),
-    { icon: <IoCalendarOutline />, label: 'Date of Birth', value: profileData?.dob || 'Still calculating their age 🧮' },
-    { icon: <IoLocationOutline />, label: 'City', value: profileData?.city || student.city || 'Lost in the wilderness 🏕️' },
-    { icon: <IoChatbubbleOutline />, label: 'Core Memory', value: profileData?.coreMemory || 'Brain empty, no thoughts 🫥' },
-    { icon: <IoRocketOutline />, label: 'Current Status', value: profileData?.currentStatus || 'Sleeping in class 😴' },
-    { icon: <IoRocketOutline />, label: 'Dream', value: profileData?.dream || student.dream || 'To survive the next semester 😅' },
-    { icon: <IoChatbubbleOutline />, label: 'College Life in 3 Emojis', value: profileData?.emojis || '🤷‍♂️🤷‍♀️🤷' },
+    { icon: <IoCalendarOutline />, label: 'Date of Birth', value: profileData?.dob || 'Awaiting update... 🎂' },
+    { icon: <IoLocationOutline />, label: 'City', value: profileData?.city || student.city || 'Awaiting update... 📍' },
+    { icon: <IoChatbubbleOutline />, label: 'Core Memory', value: profileData?.coreMemory || 'Awaiting student\'s entry... ✨' },
+    { icon: <IoRocketOutline />, label: 'Current Status', value: profileData?.currentStatus || 'Awaiting update... 🚀' },
+    { icon: <IoRocketOutline />, label: 'Dream', value: profileData?.dream || student.dream || 'Awaiting update... 🎯' },
+    { icon: <IoChatbubbleOutline />, label: 'College Life in 3 Emojis', value: profileData?.emojis || 'Awaiting update... 🤪' },
   ];
 
   return (
