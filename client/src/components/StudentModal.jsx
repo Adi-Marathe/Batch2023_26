@@ -75,8 +75,8 @@ export default function StudentModal({ student, onClose }) {
   const fields = [
     { label: '✏️ Name:', value: student.name },
     { label: '📋 Roll No:', value: student.rollNo },
-    { label: '🎂 DOB:', value: profileData?.dob || 'Awaiting update... 🎂' },
-    { label: '📍 City:', value: profileData?.city || student.city || 'Awaiting update... 📍' },
+    { label: '🎂 DOB:', value: profileData?.dob || 'Still calculating their age 🧮' },
+    { label: '📍 City:', value: profileData?.city || student.city || 'Lost in the wilderness 🏕️' },
     { label: '✨ Core Memory:', value: profileData?.coreMemory || 'Awaiting student\'s entry... ✨' },
     { label: '🚀 Status:', value: profileData?.currentStatus || 'Awaiting update... 🚀' },
     { label: '🎯 Dream:', value: profileData?.dream || student.dream || 'Awaiting update... 🎯' },
