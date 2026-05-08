@@ -63,7 +63,7 @@ export default function StudentProfile() {
     { icon: <IoDocumentTextOutline />, label: 'Roll Number', value: student.rollNo },
     ...(student.enrollmentNo ? [{ icon: <IoCardOutline />, label: 'Enrollment No', value: student.enrollmentNo }] : []),
     { icon: <IoCalendarOutline />, label: 'Date of Birth', value: profileData?.dob || 'Still calculating their age 🧮' },
-    { icon: <IoLocationOutline />, label: 'City', value: profileData?.city || student.city || 'Lost in the wilderness 🏕️' },
+    { icon: <IoLocationOutline />, label: 'Hometown', value: profileData?.city || student.city || 'Lost in the wilderness 🏕️' },
     { icon: <IoChatbubbleOutline />, label: 'Core Memory', value: profileData?.coreMemory || 'Awaiting student\'s entry... ✨' },
     { icon: <IoRocketOutline />, label: 'Current Status', value: profileData?.currentStatus || 'Awaiting update... 🚀' },
     { icon: <IoRocketOutline />, label: 'Dream', value: profileData?.dream || student.dream || 'Awaiting update... 🎯' },

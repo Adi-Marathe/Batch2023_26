@@ -76,7 +76,7 @@ export default function StudentModal({ student, onClose }) {
     { label: '✏️ Name:', value: student.name },
     { label: '📋 Roll No:', value: student.rollNo },
     { label: '🎂 DOB:', value: profileData?.dob || 'Still calculating their age 🧮' },
-    { label: '📍 City:', value: profileData?.city || student.city || 'Lost in the wilderness 🏕️' },
+    { label: '📍 Hometown:', value: profileData?.city || student.city || 'Lost in the wilderness 🏕️' },
     { label: '✨ Core Memory:', value: profileData?.coreMemory || 'Awaiting student\'s entry... ✨' },
     { label: '🚀 Status:', value: profileData?.currentStatus || 'Awaiting update... 🚀' },
     { label: '🎯 Dream:', value: profileData?.dream || student.dream || 'Awaiting update... 🎯' },
@@ -223,7 +223,7 @@ export default function StudentModal({ student, onClose }) {
                   <input type="text" maxLength={20} placeholder="e.g. 15 Dec 2004" value={formData.dob} onChange={e => setFormData({...formData, dob: e.target.value})} />
                 </div>
                 <div className="form-group">
-                  <label>City</label>
+                  <label>Hometown</label>
                   <input type="text" maxLength={30} placeholder="e.g. Mumbai" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} />
                 </div>
                 <div className="form-group">

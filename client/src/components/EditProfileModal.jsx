@@ -133,7 +133,7 @@ export default function EditProfileModal({ isOpen, onClose, student, profileData
                 </div>
 
                 <div className="form-group" style={{ marginBottom: '1rem' }}>
-                  <label>City</label>
+                  <label>Hometown</label>
                   <input
                     type="text"
                     maxLength={30}
