@@ -157,7 +157,7 @@ const staff = [
   },
   {
     id: 18,
-    name: 'Vale Mama',
+    name: 'Canteen Mama',
     designation: 'Canteen Manager',
     subject: '',
     photo: '',
