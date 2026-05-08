@@ -1,47 +1,95 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MEMORIES } from '../data/memories';
 import { toast } from 'react-hot-toast';
 import './MediaViewer.css';
 
+// Thumbnail — videos shown as play-icon div, NOT a <video> element (huge bandwidth saving)
+const ThumbItem = memo(function ThumbItem({ m, i, idx, goToThumb }) {
+  const [inView, setInView] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { rootMargin: '50px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleClick = useCallback(() => goToThumb(i), [goToThumb, i]);
+
+  return (
+    <button
+      ref={ref}
+      className={'mv-th' + (i === idx ? ' mv-th-active' : '')}
+      onClick={handleClick}
+    >
+      {inView ? (
+        m.type === 'video' ? (
+          <div className="mv-th-video">▶</div>
+        ) : m.media ? (
+          <img src={m.media} alt="" loading="lazy" decoding="async" />
+        ) : (
+          <span>📷</span>
+        )
+      ) : (
+        <span style={{ opacity: 0.2 }}>📷</span>
+      )}
+    </button>
+  );
+});
+
 export default function MediaViewer() {
   const { id } = useParams();
   const navigate = useNavigate();
-  
-  // Find current index based on URL
-  if (MEMORIES.length === 0) {
-    return (
-      <div className="mv-overlay">
-        <div className="mv-topbar">
-          <button className="mv-back" onClick={() => navigate('/#memories')}>← Back to Home</button>
-        </div>
-        <div className="mv-body" style={{ color: 'white', flexDirection: 'column', gap: '1rem' }}>
-           <h3>No memories found</h3>
-           <p>Start by adding new fresh things! ✨</p>
-        </div>
-      </div>
-    );
-  }
 
-  const currentIndex = MEMORIES.findIndex((m) => m.id === parseInt(id, 10));
-  const idx = currentIndex !== -1 ? currentIndex : 0;
-  
+  // ── All hooks must be called unconditionally ──
+  const idx = useMemo(() => {
+    const found = MEMORIES.findIndex((m) => m.id === parseInt(id, 10));
+    return found !== -1 ? found : 0;
+  }, [id]);
+
   const vidRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [zoom, setZoom] = useState(1);
-  const isLoggedIn = !!localStorage.getItem('token');
 
+  const isLoggedIn = !!localStorage.getItem('token');
   const item = MEMORIES[idx];
   const isVid = item?.type === 'video';
 
-  // Reset on slide change
+  // Reset state when media changes
   useEffect(() => {
     setZoom(1);
     setPlaying(false);
   }, [idx]);
 
-  // Keys
+  const closeViewer = useCallback(() => navigate('/#memories'), [navigate]);
+
+  const prev = useCallback(() => {
+    const newIdx = (idx - 1 + MEMORIES.length) % MEMORIES.length;
+    navigate(`/flashback/${MEMORIES[newIdx].id}`);
+  }, [idx, navigate]);
+
+  const next = useCallback(() => {
+    const newIdx = (idx + 1) % MEMORIES.length;
+    navigate(`/flashback/${MEMORIES[newIdx].id}`);
+  }, [idx, navigate]);
+
+  const goToThumb = useCallback((i) => {
+    navigate(`/flashback/${MEMORIES[i].id}`);
+  }, [navigate]);
+
+  // Keyboard navigation — dep array prevents re-attaching on every render
   useEffect(() => {
     const fn = (e) => {
       if (e.key === 'Escape') closeViewer();
@@ -50,49 +98,30 @@ export default function MediaViewer() {
     };
     window.addEventListener('keydown', fn);
     return () => window.removeEventListener('keydown', fn);
-  });
+  }, [closeViewer, prev, next]);
 
-  const closeViewer = () => {
-    navigate('/#memories'); // Navigate back to the flashbacks section on home page
-  };
-
-  const prev = () => {
-    const newIdx = (idx - 1 + MEMORIES.length) % MEMORIES.length;
-    navigate(`/flashback/${MEMORIES[newIdx].id}`);
-  };
-  
-  const next = () => {
-    const newIdx = (idx + 1) % MEMORIES.length;
-    navigate(`/flashback/${MEMORIES[newIdx].id}`);
-  };
-  
-  const goToThumb = (i) => {
-    navigate(`/flashback/${MEMORIES[i].id}`);
-  };
-
-  const togglePlay = () => {
+  const togglePlay = useCallback(() => {
     if (!vidRef.current) return;
     playing ? vidRef.current.pause() : vidRef.current.play();
-    setPlaying(!playing);
-  };
+    setPlaying((p) => !p);
+  }, [playing]);
 
-  const download = async () => {
-    if (!item.media) return;
-    
+  const toggleMute = useCallback(() => {
+    if (!vidRef.current) return;
+    vidRef.current.muted = !muted;
+    setMuted((m) => !m);
+  }, [muted]);
+
+  const download = useCallback(async () => {
+    if (!item?.media) return;
     if (!isLoggedIn) {
-      toast('Unlock your profile to save this memory! 🔒', { 
+      toast('Unlock your profile to save this memory! 🔒', {
         icon: '🔑',
-        style: {
-          borderRadius: '10px',
-          background: 'var(--ink)',
-          color: '#fff',
-        },
+        style: { borderRadius: '10px', background: 'var(--ink)', color: '#fff' },
       });
       return;
     }
-    
     const toastId = toast.loading('Preparing your memory... ⏳');
-    
     try {
       const r = await fetch(item.media);
       if (!r.ok) throw new Error('Download failed');
@@ -103,42 +132,51 @@ export default function MediaViewer() {
       a.download = item.title.replace(/[^a-z0-9]/gi, '_') + (isVid ? '.mp4' : '.png');
       a.click();
       URL.revokeObjectURL(u);
-      toast.success('Memory saved successfully! 🎉', { id: toastId });
-    } catch (err) { 
+      toast.success('Memory saved! 🎉', { id: toastId });
+    } catch (err) {
       console.error(err);
-      window.open(item.media, '_blank'); 
+      window.open(item.media, '_blank');
       toast.error('Could not auto-download, opened in new tab instead!', { id: toastId });
     }
-  };
+  }, [item, isVid, isLoggedIn]);
+
+  // ── Empty state (after all hooks) ──
+  if (MEMORIES.length === 0) {
+    return (
+      <div className="mv-overlay">
+        <div className="mv-topbar">
+          <button className="mv-back" onClick={() => navigate('/#memories')}>← Back to Home</button>
+        </div>
+        <div className="mv-body" style={{ color: 'white', flexDirection: 'column', gap: '1rem' }}>
+          <h3>No memories found</h3>
+          <p>Start by adding new fresh things! ✨</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mv-overlay">
       {/* TOP BAR */}
       <div className="mv-topbar">
-        <button className="mv-back" onClick={closeViewer}>
-          ← Back to Flashbacks
-        </button>
+        <button className="mv-back" onClick={closeViewer}>← Back to Flashbacks</button>
         <span className="mv-title">{item.title}</span>
         <div className="mv-actions">
           {item.media && !isVid && (
             <>
-              <button className="mv-act" onClick={() => setZoom(z => Math.max(z - 0.25, 0.5))}>−</button>
+              <button className="mv-act" onClick={() => setZoom((z) => Math.max(z - 0.25, 0.5))}>−</button>
               <span className="mv-zoom-val" onClick={() => setZoom(1)}>{Math.round(zoom * 100)}%</span>
-              <button className="mv-act" onClick={() => setZoom(z => Math.min(z + 0.25, 4))}>+</button>
+              <button className="mv-act" onClick={() => setZoom((z) => Math.min(z + 0.25, 4))}>+</button>
             </>
           )}
           {item.media && isVid && (
             <>
               <button className="mv-act" onClick={togglePlay}>{playing ? '⏸' : '▶'}</button>
-              <button className="mv-act" onClick={() => { if(vidRef.current) { vidRef.current.muted = !muted; setMuted(!muted); } }}>
-                {muted ? '🔇' : '🔊'}
-              </button>
+              <button className="mv-act" onClick={toggleMute}>{muted ? '🔇' : '🔊'}</button>
             </>
           )}
           {item.media && (
-            <button className="mv-act mv-dl" onClick={download} title="Save to device">
-              ⬇ Download
-            </button>
+            <button className="mv-act mv-dl" onClick={download} title="Save to device">⬇ Download</button>
           )}
           <span className="mv-counter">{idx + 1}/{MEMORIES.length}</span>
         </div>
@@ -148,28 +186,19 @@ export default function MediaViewer() {
       <div className="mv-body">
         <button className="mv-arrow mv-arrow-l" onClick={prev}>‹</button>
 
-        <div 
-          className="mv-stage" 
+        <div
+          className="mv-stage"
           onContextMenu={(e) => {
-            if (!isLoggedIn) {
-              e.preventDefault();
-              toast.error('Inspect/Save disabled for guests!');
-            }
+            if (!isLoggedIn) { e.preventDefault(); toast.error('Inspect/Save disabled for guests!'); }
           }}
-          onDragStart={(e) => {
-            if (!isLoggedIn) e.preventDefault();
-          }}
+          onDragStart={(e) => { if (!isLoggedIn) e.preventDefault(); }}
         >
           {item.media && !isVid && (
             <img
               src={item.media}
               alt={item.title}
               className="mv-img"
-              style={{ 
-                transform: `scale(${zoom})`, 
-                pointerEvents: isLoggedIn ? 'auto' : 'none',
-                userSelect: 'none'
-              }}
+              style={{ transform: `scale(${zoom})`, pointerEvents: isLoggedIn ? 'auto' : 'none', userSelect: 'none' }}
               draggable={false}
             />
           )}
@@ -179,15 +208,13 @@ export default function MediaViewer() {
               src={item.media}
               className="mv-vid"
               controls
-              controlsList={isLoggedIn ? "" : "nodownload"}
+              controlsList={isLoggedIn ? '' : 'nodownload'}
               autoPlay
               onClick={togglePlay}
               onEnded={() => setPlaying(false)}
               onPlay={() => setPlaying(true)}
               onPause={() => setPlaying(false)}
-              style={{
-                pointerEvents: isLoggedIn ? 'auto' : 'none'
-              }}
+              style={{ pointerEvents: isLoggedIn ? 'auto' : 'none' }}
             />
           )}
           {!item.media && (
@@ -202,22 +229,10 @@ export default function MediaViewer() {
         <button className="mv-arrow mv-arrow-r" onClick={next}>›</button>
       </div>
 
-      {/* THUMBNAILS */}
+      {/* THUMBNAIL STRIP */}
       <div className="mv-thumbs">
         {MEMORIES.map((m, i) => (
-          <button
-            key={m.id}
-            className={'mv-th' + (i === idx ? ' mv-th-active' : '')}
-            onClick={() => goToThumb(i)}
-          >
-            {m.media && m.type === 'video' ? (
-              <video src={m.media} muted playsInline />
-            ) : m.media ? (
-              <img src={m.media} alt="" />
-            ) : (
-              <span>📷</span>
-            )}
-          </button>
+          <ThumbItem key={m.id} m={m} i={i} idx={idx} goToThumb={goToThumb} />
         ))}
       </div>
     </div>

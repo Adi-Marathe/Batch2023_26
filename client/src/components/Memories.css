@@ -31,6 +31,7 @@
   width: max-content;
   gap: var(--space-md);
   padding: var(--space-sm) 0;
+  will-change: transform;
 }
 .filmstrip-row-1 { animation: scrollLeft 30s linear infinite; }
 .filmstrip-row-2 { animation: scrollRight 35s linear infinite; margin-top: var(--space-md); }
@@ -83,6 +84,43 @@
   text-align: center;
   padding: 0 0.3rem;
   line-height: 1.2;
+}
+
+/* ── Video thumbnail in filmstrip (no autoPlay) ── */
+.filmstrip-video-thumb {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+.filmstrip-video-icon {
+  font-size: 2.2rem;
+  opacity: 0.85;
+  color: #fff;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.filmstrip-item:hover .filmstrip-video-icon {
+  background: rgba(255,255,255,0.28);
+}
+.filmstrip-video-label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+  padding: 0 0.4rem;
+  line-height: 1.3;
 }
 
 /* ── Message Wall ── */

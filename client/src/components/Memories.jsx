@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Memories.css';
 import { MEMORIES } from '../data/memories';
@@ -25,14 +25,91 @@ const STICKY_MESSAGES = [
 
 const WASHI_COLORS = ['var(--yellow)', 'var(--coral)', 'var(--mint)', 'var(--lavender)', 'var(--sky)'];
 
+// ── Memoized Filmstrip Item ──
+// Videos show a static thumbnail (NO autoPlay) to save bandwidth.
+// Images use native lazy loading via the browser.
+const FilmstripItem = memo(({ m, openViewer, bg }) => {
+  const [isInView, setIsInView] = useState(false);
+  const itemRef = useRef(null);
+
+  useEffect(() => {
+    const el = itemRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { rootMargin: '100px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleClick = useCallback(() => openViewer(m.id), [openViewer, m.id]);
+
+  return (
+    <div ref={itemRef} className="filmstrip-item" onClick={handleClick}>
+      {!isInView ? (
+        <div className="filmstrip-item-placeholder" style={{ background: bg }}>
+          <span className="filmstrip-item-placeholder-icon">📷</span>
+          <span className="filmstrip-item-placeholder-text">{m.title}</span>
+        </div>
+      ) : m.type === 'video' ? (
+        // Static video card — no <video> element = no network request in filmstrip
+        <div className="filmstrip-video-thumb">
+          <span className="filmstrip-video-icon">▶</span>
+          <span className="filmstrip-video-label">{m.title}</span>
+        </div>
+      ) : m.media ? (
+        <img
+          src={m.media}
+          alt={m.title}
+          className="filmstrip-item-img"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div className="filmstrip-item-placeholder" style={{ background: bg }}>
+          <span className="filmstrip-item-placeholder-icon">📷</span>
+          <span className="filmstrip-item-placeholder-text">{m.title}</span>
+        </div>
+      )}
+    </div>
+  );
+});
+FilmstripItem.displayName = 'FilmstripItem';
+
 export default function Memories() {
   const navigate = useNavigate();
   const [bannerVisible, setBannerVisible] = useState(false);
   const bannerRef = useRef(null);
 
-  const half = Math.ceil(MEMORIES.length / 2);
-  const row1 = [...MEMORIES.slice(0, half), ...MEMORIES.slice(0, half)];
-  const row2 = [...MEMORIES.slice(half), ...MEMORIES.slice(half)];
+  // Memoize rows so they aren't recomputed every render
+  const [row1, row2] = useMemo(() => {
+    const half = Math.ceil(MEMORIES.length / 2);
+    return [
+      [...MEMORIES.slice(0, half), ...MEMORIES.slice(0, half)],
+      [...MEMORIES.slice(half), ...MEMORIES.slice(half)],
+    ];
+  }, []);
+
+  // Memoize confetti so random values are stable across renders
+  const confetti = useMemo(() =>
+    Array.from({ length: 30 }, (_, i) => ({
+      width: `${6 + Math.random() * 8}px`,
+      height: `${6 + Math.random() * 8}px`,
+      background: ['var(--yellow)', 'var(--coral)', 'var(--mint)', 'var(--lavender)', 'var(--sky)'][i % 5],
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      '--tx': `${(Math.random() - 0.5) * 200}px`,
+      '--ty': `${(Math.random() - 0.5) * 200}px`,
+      animationDelay: `${i * 0.05}s`,
+      borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+    }))
+  , []);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -43,21 +120,10 @@ export default function Memories() {
     return () => obs.disconnect();
   }, []);
 
-  const openViewer = (memoryId) => {
+  // Stable callback reference so FilmstripItems don't re-render unnecessarily
+  const openViewer = useCallback((memoryId) => {
     navigate(`/flashback/${memoryId}`);
-  };
-
-  const confetti = Array.from({ length: 30 }, (_, i) => ({
-    width: `${6 + Math.random() * 8}px`,
-    height: `${6 + Math.random() * 8}px`,
-    background: ['var(--yellow)', 'var(--coral)', 'var(--mint)', 'var(--lavender)', 'var(--sky)'][i % 5],
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 100}%`,
-    '--tx': `${(Math.random() - 0.5) * 200}px`,
-    '--ty': `${(Math.random() - 0.5) * 200}px`,
-    animationDelay: `${i * 0.05}s`,
-    borderRadius: Math.random() > 0.5 ? '50%' : '2px',
-  }));
+  }, [navigate]);
 
   return (
     <>
@@ -71,34 +137,22 @@ export default function Memories() {
         <div className="filmstrip-container">
           <div className="filmstrip-row filmstrip-row-1">
             {row1.map((m, i) => (
-              <div key={`r1-${i}`} className="filmstrip-item" onClick={() => openViewer(m.id)}>
-                {m.media && m.type === 'video' ? (
-                  <video src={m.media} className="filmstrip-item-img" autoPlay muted loop playsInline />
-                ) : m.media ? (
-                  <img src={m.media} alt={m.title} className="filmstrip-item-img" />
-                ) : (
-                  <div className="filmstrip-item-placeholder" style={{ background: PASTEL_BG[i % 5] }}>
-                    <span className="filmstrip-item-placeholder-icon">📷</span>
-                    <span className="filmstrip-item-placeholder-text">{m.title}</span>
-                  </div>
-                )}
-              </div>
+              <FilmstripItem
+                key={`r1-${i}-${m.id}`}
+                m={m}
+                openViewer={openViewer}
+                bg={PASTEL_BG[i % PASTEL_BG.length]}
+              />
             ))}
           </div>
           <div className="filmstrip-row filmstrip-row-2">
             {row2.map((m, i) => (
-              <div key={`r2-${i}`} className="filmstrip-item" onClick={() => openViewer(m.id)}>
-                {m.media && m.type === 'video' ? (
-                  <video src={m.media} className="filmstrip-item-img" autoPlay muted loop playsInline />
-                ) : m.media ? (
-                  <img src={m.media} alt={m.title} className="filmstrip-item-img" />
-                ) : (
-                  <div className="filmstrip-item-placeholder" style={{ background: PASTEL_BG[(i + 2) % 5] }}>
-                    <span className="filmstrip-item-placeholder-icon">📷</span>
-                    <span className="filmstrip-item-placeholder-text">{m.title}</span>
-                  </div>
-                )}
-              </div>
+              <FilmstripItem
+                key={`r2-${i}-${m.id}`}
+                m={m}
+                openViewer={openViewer}
+                bg={PASTEL_BG[(i + 2) % PASTEL_BG.length]}
+              />
             ))}
           </div>
         </div>
