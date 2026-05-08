@@ -63,7 +63,6 @@ export default function MediaViewer() {
   const [muted, setMuted] = useState(false);
   const [zoom, setZoom] = useState(1);
 
-  const isLoggedIn = !!localStorage.getItem('token');
   const item = MEMORIES[idx];
   const isVid = item?.type === 'video';
 
@@ -112,33 +111,7 @@ export default function MediaViewer() {
     setMuted((m) => !m);
   }, [muted]);
 
-  const download = useCallback(async () => {
-    if (!item?.media) return;
-    if (!isLoggedIn) {
-      toast('Unlock your profile to save this memory! 🔒', {
-        icon: '🔑',
-        style: { borderRadius: '10px', background: 'var(--ink)', color: '#fff' },
-      });
-      return;
-    }
-    const toastId = toast.loading('Preparing your memory... ⏳');
-    try {
-      const r = await fetch(item.media);
-      if (!r.ok) throw new Error('Download failed');
-      const b = await r.blob();
-      const u = URL.createObjectURL(b);
-      const a = document.createElement('a');
-      a.href = u;
-      a.download = item.title.replace(/[^a-z0-9]/gi, '_') + (isVid ? '.mp4' : '.png');
-      a.click();
-      URL.revokeObjectURL(u);
-      toast.success('Memory saved! 🎉', { id: toastId });
-    } catch (err) {
-      console.error(err);
-      window.open(item.media, '_blank');
-      toast.error('Could not auto-download, opened in new tab instead!', { id: toastId });
-    }
-  }, [item, isVid, isLoggedIn]);
+
 
   // ── Empty state (after all hooks) ──
   if (MEMORIES.length === 0) {
@@ -175,9 +148,7 @@ export default function MediaViewer() {
               <button className="mv-act" onClick={toggleMute}>{muted ? '🔇' : '🔊'}</button>
             </>
           )}
-          {item.media && (
-            <button className="mv-act mv-dl" onClick={download} title="Save to device">⬇ Download</button>
-          )}
+
           <span className="mv-counter">{idx + 1}/{MEMORIES.length}</span>
         </div>
       </div>
@@ -189,16 +160,17 @@ export default function MediaViewer() {
         <div
           className="mv-stage"
           onContextMenu={(e) => {
-            if (!isLoggedIn) { e.preventDefault(); toast.error('Inspect/Save disabled for guests!'); }
+            e.preventDefault();
+            toast.error('Saving & Inspect are disabled!');
           }}
-          onDragStart={(e) => { if (!isLoggedIn) e.preventDefault(); }}
+          onDragStart={(e) => e.preventDefault()}
         >
           {item.media && !isVid && (
             <img
               src={item.media}
               alt={item.title}
               className="mv-img"
-              style={{ transform: `scale(${zoom})`, pointerEvents: isLoggedIn ? 'auto' : 'none', userSelect: 'none' }}
+              style={{ transform: `scale(${zoom})`, pointerEvents: 'auto', userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
               draggable={false}
             />
           )}
@@ -208,13 +180,13 @@ export default function MediaViewer() {
               src={item.media}
               className="mv-vid"
               controls
-              controlsList={isLoggedIn ? '' : 'nodownload'}
+              controlsList="nodownload"
               autoPlay
               onClick={togglePlay}
               onEnded={() => setPlaying(false)}
               onPlay={() => setPlaying(true)}
               onPause={() => setPlaying(false)}
-              style={{ pointerEvents: isLoggedIn ? 'auto' : 'none' }}
+              style={{ pointerEvents: 'auto', WebkitTouchCallout: 'none' }}
             />
           )}
           {!item.media && (
