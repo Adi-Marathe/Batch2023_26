@@ -36,13 +36,19 @@ export default function StaffCard({ staff, index }) {
       <span className="staff-card-star">⭐</span>
       <div className="staff-card-photo">
         {staff.photo ? (
-          <img src={staff.photo} alt={staff.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img 
+            src={staff.photo} 
+            alt={staff.name} 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            loading="lazy" 
+            decoding="async"
+          />
         ) : (
           <span className="staff-card-initials">{initials}</span>
         )}
       </div>
       <p className="staff-card-name">{staff.name}</p>
-      <p className="staff-card-subject">{staff.subject}</p>
+      <p className="staff-card-subject">{staff.designation}</p>
     </div>
   );
 }

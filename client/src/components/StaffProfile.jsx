@@ -23,9 +23,10 @@ export default function StaffProfile() {
   const fields = [
     { icon: <IoPersonOutline />, label: 'Full Name', value: staff.name },
     { icon: <IoBriefcaseOutline />, label: 'Designation', value: staff.designation },
-    { icon: <IoBookOutline />, label: 'Subject', value: staff.subject },
+    // Only show Subject if this staff member has one
+    ...(staff.subject ? [{ icon: <IoBookOutline />, label: 'Subject', value: staff.subject }] : []),
     { icon: <IoFlashOutline />, label: 'Known For', value: staff.knownFor },
-    { icon: <IoChatbubblesOutline />, label: 'Best Advice Given', value: `"${staff.advice}"`, isAdvice: true },
+    { icon: <IoChatbubblesOutline />, label: 'Best Advice Given', value: staff.advice, isAdvice: true },
   ];
 
   return (
