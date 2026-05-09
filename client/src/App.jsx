@@ -27,6 +27,8 @@ function HomePage() {
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [isSecurityActive, setIsSecurityActive] = useState(false);
+
 
   // Anti-inspect and right-click protection
   useEffect(() => {
@@ -45,24 +47,59 @@ export default function App() {
       }
     };
 
-    // Anti-screenshot (blur when window loses focus e.g. Snipping tool opened)
-    const handleBlur = () => {
+    const activateSecurity = () => {
+      setIsSecurityActive(true);
       document.body.classList.add('blur-mode');
+      // Instant blackout for ultra security
+      const content = document.querySelector('.app-content');
+      if (content) content.style.visibility = 'hidden';
+    };
+    
+    const deactivateSecurity = () => {
+      setIsSecurityActive(false);
+      document.body.classList.remove('blur-mode');
+      const content = document.querySelector('.app-content');
+      if (content) content.style.visibility = 'visible';
+    };
+    
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        activateSecurity();
+      } else {
+        deactivateSecurity();
+      }
+    };
+
+    const handleBlur = () => {
+      activateSecurity();
     };
     
     const handleFocus = () => {
-      document.body.classList.remove('blur-mode');
+      deactivateSecurity();
+    };
+
+    const handleMouseLeave = () => {
+      activateSecurity();
+    };
+    
+    const handleMouseEnter = () => {
+      deactivateSecurity();
     };
 
     // Attempt to clear clipboard on PrintScreen
     const handleKeyUp = (e) => {
       if (e.key === 'PrintScreen') {
-        navigator.clipboard.writeText(''); // Attempt to clear
+        navigator.clipboard.writeText(''); 
+        activateSecurity();
+        setTimeout(deactivateSecurity, 2000);
       }
     };
 
     document.addEventListener('contextmenu', handleContextMenu);
     document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('mouseenter', handleMouseEnter);
     window.addEventListener('blur', handleBlur);
     window.addEventListener('focus', handleFocus);
     window.addEventListener('keyup', handleKeyUp);
@@ -70,6 +107,9 @@ export default function App() {
     return () => {
       document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('mouseenter', handleMouseEnter);
       window.removeEventListener('blur', handleBlur);
       window.removeEventListener('focus', handleFocus);
       window.removeEventListener('keyup', handleKeyUp);
@@ -88,6 +128,14 @@ export default function App() {
       />
       <div className="app">
         {loading && <Loader onFinish={handleLoaderFinish} />}
+
+        <div className={`security-overlay ${isSecurityActive ? 'active' : ''}`}>
+          <div className="security-logo">🔒</div>
+          <div className="security-text">
+            <h2>Security Shield Active</h2>
+            <p>Screenshot protection enabled to protect privacy.</p>
+          </div>
+        </div>
 
         {!loading && (
           <div className="app-content">

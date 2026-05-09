@@ -32,3 +32,56 @@
     transform: translateY(0);
   }
 }
+/* ═══════════════════════════════════════════
+   SECURITY — Anti-Screenshot & Recording
+   ═══════════════════════════════════════════ */
+
+/* Prevent text selection site-wide */
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none; /* Disable iOS long-press context menu */
+}
+
+/* Severe blur mode */
+.blur-mode {
+  filter: blur(50px) grayscale(100%);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Security Overlay */
+.security-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.98);
+  backdrop-filter: blur(40px);
+  z-index: 99999999;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.security-overlay.active {
+  display: flex;
+}
+
+.security-logo {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.security-text h2 {
+  font-family: var(--font-display);
+  margin-bottom: 0.5rem;
+}
+
+.security-text p {
+  opacity: 0.7;
+}
