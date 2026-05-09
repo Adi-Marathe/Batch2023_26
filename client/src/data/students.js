@@ -98,7 +98,7 @@ const students = [
   { id: 30, name: "Sarthiki Arvind Nikam", rollNo: 30, enrollmentNo: "23511690156", photo: SarthikiNikam },
   { id: 31, name: "Shruti Bhausaheb Pagare", rollNo: 31, enrollmentNo: "23511690157", photo: ShrutiPagare },
   { id: 32, name: "Omkar Nandkishor Pawar", rollNo: 32, enrollmentNo: "23511690158", photo: OmkarPawar },
-  { id: 33, name: "Pooja Sheshrav Pawar", rollNo: 33, enrollmentNo: "23511690159", photo: PoojaMule },
+  { id: 33, name: "Pooja Sheshrav Pawar", rollNo: 33, enrollmentNo: "23511690159", photo: null },
   { id: 34, name: "Avinash Sonaji Raut", rollNo: 34, enrollmentNo: "23511690160", photo: AvinashRaut },
   { id: 35, name: "Gopal Shankar Rathod", rollNo: 35, enrollmentNo: "23511690161", photo: GopalRathod },
   { id: 36, name: "Ishwari Prakash Pale", rollNo: 36, enrollmentNo: "23511690162", photo: IshwariPale },

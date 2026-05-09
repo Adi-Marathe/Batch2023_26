@@ -49,6 +49,9 @@ export default function App() {
       shieldTimer.current = setTimeout(hideShield, ms);
     };
 
+    // On page load / refresh, make sure shield starts hidden
+    hideShield();
+
     // ═══════════════════════════════════════════
     //  1. RIGHT-CLICK PROTECTION (all platforms)
     // ═══════════════════════════════════════════
@@ -139,7 +142,12 @@ export default function App() {
     //  Fires on: Snipping Tool, Alt+Tab, 
     //  Game Bar overlay, Spotlight search
     // ═══════════════════════════════════════════
-    const onBlur = () => showShield();
+    const onBlur = () => {
+      // On mobile, scrolling can fire blur. Only show shield if page is truly not visible.
+      setTimeout(() => {
+        if (document.visibilityState === 'hidden') showShield();
+      }, 100);
+    };
     const onFocus = () => hideShield();
 
     // ═══════════════════════════════════════════
@@ -148,7 +156,10 @@ export default function App() {
     //  older Safari versions and PWAs
     // ═══════════════════════════════════════════
     const onPageHide = () => showShield();
-    const onPageShow = () => hideShield();
+    const onPageShow = (e) => {
+      // Always hide shield when page becomes visible again (refresh / bfcache restore)
+      hideShield();
+    };
 
     // ═══════════════════════════════════════════
     //  6. MULTI-FINGER TOUCH (Nothing Phone, 
@@ -193,9 +204,10 @@ export default function App() {
     const onResize = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
-      // Detect sudden small viewport changes (screenshot thumbnail on iOS)
       const widthDelta = Math.abs(w - lastWidth);
       const heightDelta = Math.abs(h - lastHeight);
+      // Only trigger if WIDTH actually changed — ignore height-only changes
+      // Mobile browsers change height when address bar hides/shows during scroll
       if (widthDelta > 0 && widthDelta < 80 && heightDelta < 80) {
         flashShield(2000);
       }

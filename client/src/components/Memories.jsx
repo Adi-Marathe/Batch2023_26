@@ -247,37 +247,43 @@ export default function Memories() {
           <h3 className="message-wall-title">💌 Message Wall</h3>
           
           <div className="sticky-notes-grid">
-            {messages.map((note, i) => (
-              <div key={note._id || i} className="sticky-note" style={{ background: note.color, transform: `rotate(${((i * 7) % 11) - 5}deg)` }}>
-                {i % 3 === 0 && <div className="sticky-note-tape" style={{ background: WASHI_COLORS[i % WASHI_COLORS.length] }} />}
-                
-                {note.enrollmentNo === currentUserEnrollmentNo && (
-                  <button 
-                    className="delete-note-btn" 
-                    onClick={() => handleDeleteMessage(note._id)}
-                    title="Remove your message"
-                  >
-                    ×
-                  </button>
-                )}
-                
-                <p className="sticky-note-message">{note.message}</p>
-                <p className="sticky-note-author">— {note.authorName}</p>
-              </div>
-            ))}
+            {messages.map((note, i) => {
+              const len = (note.message || '').length;
+              const fontSize = len <= 40 ? '1.25rem' : len <= 100 ? '1rem' : len <= 200 ? '0.9rem' : len <= 400 ? '0.82rem' : '0.75rem';
+              const padding = len <= 100 ? 'var(--space-lg) var(--space-md)' : 'var(--space-md) var(--space-sm)';
+              const stickyStyle = {
+                background: note.color,
+                transform: `rotate(${((i * 7) % 11) - 5}deg)`,
+                padding,
+              };
+              return (
+                <div key={note._id || i} className={`sticky-note${len <= 40 ? ' sticky-note--short' : ''}`} style={stickyStyle}>
+                  {i % 3 === 0 && <div className="sticky-note-tape" style={{ background: WASHI_COLORS[i % WASHI_COLORS.length] }} />}
+                  
+                  {note.enrollmentNo === currentUserEnrollmentNo && (
+                    <button 
+                      className="delete-note-btn" 
+                      onClick={() => handleDeleteMessage(note._id)}
+                      title="Remove your message"
+                    >
+                      ×
+                    </button>
+                  )}
+                  
+                  <p className="sticky-note-message" style={{ fontSize }}>{note.message}</p>
+                  <p className="sticky-note-author">— {note.authorName}</p>
+                </div>
+              );
+            })}
           </div>
 
           <form className="message-wall-form" onSubmit={handleStickIt}>
-            <div className="message-wall-input-header">
-              {newMessageText.length} / 300 characters
-            </div>
             <textarea
               className="message-wall-input"
               placeholder="Write a memory or message..."
               value={newMessageText}
               onChange={(e) => setNewMessageText(e.target.value)}
               rows={3}
-              maxLength={300}
               required
             />
             <button type="submit" className="message-wall-btn" disabled={isSubmitting}>

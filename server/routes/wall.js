@@ -39,9 +39,8 @@ router.post('/', authenticate, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Message is required' });
     }
 
-    if (message.length > 300) {
-      return res.status(400).json({ success: false, message: 'Message too long (max 300 chars)' });
-    }
+
+
 
     // Check if user already has a message
     const existing = await WallMessage.findOne({ enrollmentNo: req.enrollmentNo });
