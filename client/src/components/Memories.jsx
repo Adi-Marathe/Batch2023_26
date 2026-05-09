@@ -80,26 +80,30 @@ export default function Memories() {
   const [bannerVisible, setBannerVisible] = useState(false);
   const bannerRef = useRef(null);
 
-  const [messages, setMessages] = useState(() => {
-    const saved = localStorage.getItem('wallMessages_v2');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [messages, setMessages] = useState([]);
   const [newMessageText, setNewMessageText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const currentUserEnrollmentNo = localStorage.getItem('userEnrollmentNo');
+  const API_URL = import.meta.env.VITE_BACKEND_URL;
 
-  const handleStickIt = (e) => {
+  // Fetch all messages on mount (visible to everyone, including guests)
+  useEffect(() => {
+    fetch(`${API_URL}/api/wall`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) setMessages(data);
+      })
+      .catch(err => console.error('Failed to fetch wall messages:', err));
+  }, [API_URL]);
+
+  const handleStickIt = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     const enrollmentNo = localStorage.getItem('userEnrollmentNo');
 
     if (!token || !enrollmentNo) {
       toast.error('Only logged in users can stick messages!');
-      return;
-    }
-
-    if (messages.some(msg => msg.enrollmentNo === enrollmentNo)) {
-      toast.error('You can only stick one message to the wall!');
       return;
     }
 
@@ -116,26 +120,56 @@ export default function Memories() {
 
     const randomColor = NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)];
 
-    const newMessage = {
-      id: Date.now().toString(),
-      message: newMessageText,
-      author: `— ${authorName}`,
-      color: randomColor,
-      enrollmentNo: enrollmentNo,
-    };
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`${API_URL}/api/wall`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          message: newMessageText,
+          authorName,
+          color: randomColor,
+        }),
+      });
 
-    const updatedMessages = [...messages, newMessage];
-    setMessages(updatedMessages);
-    localStorage.setItem('wallMessages_v2', JSON.stringify(updatedMessages));
-    setNewMessageText('');
-    toast.success('Message stuck to the wall!');
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setMessages(prev => [data.data, ...prev]);
+        setNewMessageText('');
+        toast.success('Message stuck to the wall!');
+      } else {
+        toast.error(data.message || 'Failed to post message');
+      }
+    } catch (err) {
+      toast.error('Something went wrong. Try again!');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleDeleteMessage = (id) => {
-    const updatedMessages = messages.filter(msg => msg.id !== id);
-    setMessages(updatedMessages);
-    localStorage.setItem('wallMessages_v2', JSON.stringify(updatedMessages));
-    toast.success('Message removed from the wall!');
+  const handleDeleteMessage = async (id) => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await fetch(`${API_URL}/api/wall/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setMessages(prev => prev.filter(msg => msg._id !== id));
+        toast.success('Message removed from the wall!');
+      } else {
+        toast.error(data.message || 'Failed to delete message');
+      }
+    } catch (err) {
+      toast.error('Something went wrong. Try again!');
+    }
   };
 
   // Memoize rows so they aren't recomputed every render
@@ -214,13 +248,13 @@ export default function Memories() {
           
           <div className="sticky-notes-grid">
             {messages.map((note, i) => (
-              <div key={note.id || i} className="sticky-note" style={{ background: note.color, transform: `rotate(${((i * 7) % 11) - 5}deg)` }}>
+              <div key={note._id || i} className="sticky-note" style={{ background: note.color, transform: `rotate(${((i * 7) % 11) - 5}deg)` }}>
                 {i % 3 === 0 && <div className="sticky-note-tape" style={{ background: WASHI_COLORS[i % WASHI_COLORS.length] }} />}
                 
                 {note.enrollmentNo === currentUserEnrollmentNo && (
                   <button 
                     className="delete-note-btn" 
-                    onClick={() => handleDeleteMessage(note.id)}
+                    onClick={() => handleDeleteMessage(note._id)}
                     title="Remove your message"
                   >
                     ×
@@ -228,7 +262,7 @@ export default function Memories() {
                 )}
                 
                 <p className="sticky-note-message">{note.message}</p>
-                <p className="sticky-note-author">{note.author}</p>
+                <p className="sticky-note-author">— {note.authorName}</p>
               </div>
             ))}
           </div>
@@ -246,7 +280,9 @@ export default function Memories() {
               maxLength={300}
               required
             />
-            <button type="submit" className="message-wall-btn">Stick it</button>
+            <button type="submit" className="message-wall-btn" disabled={isSubmitting}>
+              {isSubmitting ? 'Sticking...' : 'Stick it'}
+            </button>
           </form>
         </div>
 

@@ -32,56 +32,74 @@
     transform: translateY(0);
   }
 }
+
 /* ═══════════════════════════════════════════
-   SECURITY — Anti-Screenshot & Recording
+   SECURITY — Anti-Screenshot Protection
    ═══════════════════════════════════════════ */
 
-/* Prevent text selection site-wide */
+/* Disable iOS long-press context menu on images */
 body {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none; /* Disable iOS long-press context menu */
+  -webkit-touch-callout: none;
 }
 
-/* Severe blur mode */
-.blur-mode {
-  filter: blur(50px) grayscale(100%);
+/* Prevent image drag */
+img, video {
+  -webkit-user-drag: none;
+  user-drag: none;
   pointer-events: none;
-  overflow: hidden;
 }
 
-/* Security Overlay */
-.security-overlay {
+/* Re-enable pointer events on clickable images */
+.filmstrip-item img,
+.filmstrip-item video,
+.student-card img,
+.staff-card img,
+.navbar-pfp {
+  pointer-events: auto;
+}
+
+/* ── Security Shield ── */
+.security-shield {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.98);
-  backdrop-filter: blur(40px);
   z-index: 99999999;
-  display: none;
+  background: #0f172a;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   color: white;
   text-align: center;
   padding: 2rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0s, visibility 0s;
 }
 
-.security-overlay.active {
-  display: flex;
+.security-shield.active {
+  opacity: 1;
+  visibility: visible;
 }
 
-.security-logo {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+.security-shield-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  animation: shieldPulse 2s ease-in-out infinite;
 }
 
-.security-text h2 {
-  font-family: var(--font-display);
+@keyframes shieldPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.security-shield h2 {
+  font-family: var(--font-display, 'Patrick Hand', cursive);
+  font-size: 1.8rem;
   margin-bottom: 0.5rem;
 }
 
-.security-text p {
-  opacity: 0.7;
+.security-shield p {
+  font-size: 1rem;
+  opacity: 0.6;
+  max-width: 400px;
 }
