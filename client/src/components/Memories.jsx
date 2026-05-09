@@ -16,7 +16,7 @@ const STICKY_MESSAGES = [
   { message: "I'll carry these memories in my cache — they'll never be cleared. 🧠", author: "— Saurabh", color: "#D6F0FF" },
   { message: "From 'Hello World' to 'Goodbye College' — what a journey. 🚀", author: "— Khushi", color: "#FFE8D6" },
   { message: "The WiFi was slow, but the friendships were fast. Miss you all already.", author: "— Yash", color: "#FFE066" },
-  { message: "Best debugging partners anyone could ask for. You're all 200 OK in my book. ✅", author: "— Deveh", color: "#D6FFF0" },
+  { message: "Best debugging partners anyone could ask for. You're all 200 OK in my book. ✅", author: "— Devesh", color: "#D6FFF0" },
   { message: "Every error was a lesson, every success was a celebration. Here's to us! 🥂", author: "— Poonam", color: "#FFD6D6" },
   { message: "Keep pushing commits, keep pushing forward. The world isn't ready for us. 🌍", author: "— Girish", color: "#EDD6FF" },
   { message: "No amount of git revert can undo these memories. And I wouldn't want to. 🖤", author: "— Nikita", color: "#D6F0FF" },
