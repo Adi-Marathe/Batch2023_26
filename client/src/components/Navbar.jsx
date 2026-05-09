@@ -91,78 +91,80 @@ export default function Navbar() {
           <span>Batch 2023–26</span>
         </div>
 
-        <div className="navbar-right-controls">
-          {isLoggedIn && loggedInUser ? (
-            <div className="navbar-profile-container" ref={menuRef}>
-              <div 
-                className="navbar-profile-btn" 
-                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+        <div className="navbar-menu-container">
+          <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>
+            {NAV_ITEMS.map((item) => (
+              <a
+                key={item.section}
+                className="navbar-link"
+                href={item.section}
+                onClick={(e) => handleLinkClick(e, item)}
               >
-                {loggedInUser.photo ? (
-                  <img src={loggedInUser.photo} alt={loggedInUser.name} className="navbar-pfp" />
-                ) : (
-                  <div className="navbar-pfp-placeholder">
-                    {loggedInUser.name.charAt(0)}
+                <span className="navbar-link-icon">{item.icon}</span>
+                {item.label}
+              </a>
+            ))}
+          </div>
+
+          <div className="navbar-right-controls">
+            {isLoggedIn && loggedInUser ? (
+              <div className="navbar-profile-container" ref={menuRef}>
+                <div 
+                  className="navbar-profile-btn" 
+                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                >
+                  {loggedInUser.photo ? (
+                    <img src={loggedInUser.photo} alt={loggedInUser.name} className="navbar-pfp" />
+                  ) : (
+                    <div className="navbar-pfp-placeholder">
+                      {loggedInUser.name.charAt(0)}
+                    </div>
+                  )}
+                </div>
+                
+                {profileMenuOpen && (
+                  <div className="navbar-profile-dropdown">
+                    <div className="dropdown-header">
+                      <p className="dropdown-name">{loggedInUser.name}</p>
+                      <p className="dropdown-roll">Roll No: {loggedInUser.rollNo}</p>
+                    </div>
+                    
+                    <div className="mobile-nav-links-in-dropdown">
+                      {NAV_ITEMS.map((item) => (
+                        <button
+                          key={`dropdown-${item.section}`}
+                          className="dropdown-item"
+                          onClick={(e) => {
+                            setProfileMenuOpen(false);
+                            handleLinkClick(e, item);
+                          }}
+                        >
+                          {item.icon} {item.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button className="dropdown-item logout-item" onClick={handleLogout}>
+                      <IoLogOutOutline /> Exit Squad
+                    </button>
                   </div>
                 )}
               </div>
-              
-              {profileMenuOpen && (
-                <div className="navbar-profile-dropdown">
-                  <div className="dropdown-header">
-                    <p className="dropdown-name">{loggedInUser.name}</p>
-                    <p className="dropdown-roll">Roll No: {loggedInUser.rollNo}</p>
-                  </div>
-                  
-                  <div className="mobile-nav-links-in-dropdown">
-                    {NAV_ITEMS.map((item) => (
-                      <button
-                        key={`dropdown-${item.section}`}
-                        className="dropdown-item"
-                        onClick={(e) => {
-                          setProfileMenuOpen(false);
-                          handleLinkClick(e, item);
-                        }}
-                      >
-                        {item.icon} {item.label}
-                      </button>
-                    ))}
-                  </div>
+            ) : (
+              <button className="navbar-login-btn" onClick={() => { setMenuOpen(false); setLoginModalOpen(true); }}>
+                <IoLogInOutline /> Unlock
+              </button>
+            )}
 
-                  <button className="dropdown-item logout-item" onClick={handleLogout}>
-                    <IoLogOutOutline /> Exit Squad
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <button className="navbar-login-btn" onClick={() => { setMenuOpen(false); setLoginModalOpen(true); }}>
-              <IoLogInOutline /> Unlock
-            </button>
-          )}
-
-          {(!isLoggedIn || !loggedInUser) && (
-            <div
-              className={`navbar-hamburger ${menuOpen ? 'open' : ''}`}
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              <span /><span /><span />
-            </div>
-          )}
-        </div>
-
-        <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>
-          {NAV_ITEMS.map((item) => (
-            <a
-              key={item.section}
-              className="navbar-link"
-              href={item.section}
-              onClick={(e) => handleLinkClick(e, item)}
-            >
-              <span className="navbar-link-icon">{item.icon}</span>
-              {item.label}
-            </a>
-          ))}
+            {(!isLoggedIn || !loggedInUser) && (
+              <div
+                className={`navbar-hamburger ${menuOpen ? 'open' : ''}`}
+                onClick={() => setMenuOpen(!menuOpen)}
+              >
+                <span /><span /><span />
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 

@@ -51,6 +51,12 @@
   gap: 0.3rem;
 }
 
+.navbar-menu-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .navbar-right-controls {
   display: flex;
   align-items: center;
