@@ -82,6 +82,18 @@ import mem81 from '../assets/images/Memories/TY Traditional Day.jpg';
 import mem82 from '../assets/images/Memories/TY.mp4';
 import mem83 from '../assets/images/Memories/Fun moment.mp4';
 import mem84 from '../assets/images/Memories/Last day of clg.jpeg';
+import mem85 from '../assets/images/Memories/Submisson Days.mp4';
+import mem86 from '../assets/images/Memories/Traditional Day Practice.mp4';
+import mem87 from '../assets/images/Memories/TY memories.mp4';
+import mem88 from '../assets/images/Memories/😆 (2).mp4';
+import mem89 from '../assets/images/Memories/😆.mp4';
+import mem90 from '../assets/images/Memories/😜.mp4';
+import mem91 from '../assets/images/Memories/🤗.mp4';
+import mem92 from '../assets/images/Memories/🤡 (1).mp4';
+import mem93 from '../assets/images/Memories/🤡.mp4';
+import mem94 from '../assets/images/Memories/🤭.mp4';
+import mem95 from '../assets/images/Memories/🥲.mp4';
+import mem96 from '../assets/images/Memories/🫰.mp4';
 
 export const MEMORIES = [
   { id: 1, title: '3 Queen Of Department', media: mem1, type: 'image' },
@@ -168,4 +180,17 @@ export const MEMORIES = [
   { id: 82, title: 'TY', media: mem82, type: 'video' },
   { id: 83, title: 'Fun moment 😂', media: mem83, type: 'video' },
   { id: 84, title: 'Last day of clg 🥺', media: mem84, type: 'image' },
+  { id: 85, title: 'Submisson Days', media: mem85, type: 'video' },
+  { id: 86, title: 'Traditional Day Practice ✨', media: mem86, type: 'video' },
+  { id: 87, title: 'TY Memories', media: mem87, type: 'video' },
+  { id: 88, title: '😆', media: mem88, type: 'video' },
+  { id: 89, title: '😆', media: mem89, type: 'video' },
+  { id: 90, title: '😜', media: mem90, type: 'video' },
+  { id: 91, title: '🤗', media: mem91, type: 'video' },
+  { id: 92, title: '🤡', media: mem92, type: 'video' },
+  { id: 93, title: '🤡', media: mem93, type: 'video' },
+  { id: 94, title: '🤭', media: mem94, type: 'video' },
+  { id: 95, title: '🥲', media: mem95, type: 'video' },
+  { id: 96, title: '🫰', media: mem96, type: 'video' },
 ];
+
