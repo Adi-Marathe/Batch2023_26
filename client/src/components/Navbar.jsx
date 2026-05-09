@@ -91,26 +91,7 @@ export default function Navbar() {
           <span>Batch 2023–26</span>
         </div>
 
-        <div
-          className={`navbar-hamburger ${menuOpen ? 'open' : ''}`}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <span /><span /><span />
-        </div>
-
-        <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>
-          {NAV_ITEMS.map((item) => (
-            <a
-              key={item.section}
-              className="navbar-link"
-              href={item.section}
-              onClick={(e) => handleLinkClick(e, item)}
-            >
-              <span className="navbar-link-icon">{item.icon}</span>
-              {item.label}
-            </a>
-          ))}
-          
+        <div className="navbar-right-controls">
           {isLoggedIn && loggedInUser ? (
             <div className="navbar-profile-container" ref={menuRef}>
               <div 
@@ -143,6 +124,27 @@ export default function Navbar() {
               <IoLogInOutline /> Unlock
             </button>
           )}
+
+          <div
+            className={`navbar-hamburger ${menuOpen ? 'open' : ''}`}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <span /><span /><span />
+          </div>
+        </div>
+
+        <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>
+          {NAV_ITEMS.map((item) => (
+            <a
+              key={item.section}
+              className="navbar-link"
+              href={item.section}
+              onClick={(e) => handleLinkClick(e, item)}
+            >
+              <span className="navbar-link-icon">{item.icon}</span>
+              {item.label}
+            </a>
+          ))}
         </div>
       </nav>
 
