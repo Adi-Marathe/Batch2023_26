@@ -113,7 +113,23 @@ export default function Navbar() {
                     <p className="dropdown-name">{loggedInUser.name}</p>
                     <p className="dropdown-roll">Roll No: {loggedInUser.rollNo}</p>
                   </div>
-                  <button className="dropdown-item" onClick={handleLogout}>
+                  
+                  <div className="mobile-nav-links-in-dropdown">
+                    {NAV_ITEMS.map((item) => (
+                      <button
+                        key={`dropdown-${item.section}`}
+                        className="dropdown-item"
+                        onClick={(e) => {
+                          setProfileMenuOpen(false);
+                          handleLinkClick(e, item);
+                        }}
+                      >
+                        {item.icon} {item.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button className="dropdown-item logout-item" onClick={handleLogout}>
                     <IoLogOutOutline /> Exit Squad
                   </button>
                 </div>
@@ -125,12 +141,14 @@ export default function Navbar() {
             </button>
           )}
 
-          <div
-            className={`navbar-hamburger ${menuOpen ? 'open' : ''}`}
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            <span /><span /><span />
-          </div>
+          {(!isLoggedIn || !loggedInUser) && (
+            <div
+              className={`navbar-hamburger ${menuOpen ? 'open' : ''}`}
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <span /><span /><span />
+            </div>
+          )}
         </div>
 
         <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>
