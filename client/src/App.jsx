@@ -27,13 +27,20 @@ function HomePage() {
 
 export default function App() {
   const [loading, setLoading] = useState(true);
-  const [shieldActive, setShieldActive] = useState(false);
   const shieldTimer = useRef(null);
+  const shieldRef = useRef(null);
 
   useEffect(() => {
-    // ── Shield Helpers ──
-    const showShield = () => setShieldActive(true);
-    const hideShield = () => setShieldActive(false);
+    // ── Shield Helpers (Direct DOM — bypasses React render cycle) ──
+    // React setState takes ~16ms to re-render. Win+Shift+S captures BEFORE that.
+    // Direct DOM manipulation is synchronous and instant.
+    const showShield = () => {
+      if (shieldRef.current) shieldRef.current.classList.add('active');
+    };
+
+    const hideShield = () => {
+      if (shieldRef.current) shieldRef.current.classList.remove('active');
+    };
 
     // Timed shield: show for N ms then auto-hide
     const flashShield = (ms = 2000) => {
@@ -251,8 +258,8 @@ export default function App() {
         containerStyle={{ zIndex: 999999 }}
       />
 
-      {/* Security Shield — covers EVERYTHING when active */}
-      <div className={`security-shield ${shieldActive ? 'active' : ''}`}>
+      {/* Security Shield — Direct DOM via ref for instant response */}
+      <div ref={shieldRef} className="security-shield">
         <div className="security-shield-icon">🛡️</div>
         <h2>Content Protected</h2>
         <p>Screenshots are disabled to protect student privacy.</p>
