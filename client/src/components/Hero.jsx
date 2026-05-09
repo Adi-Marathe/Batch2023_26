@@ -31,7 +31,7 @@ const SUBTITLE_TEXT = "2023 – 2026 · We walked in as strangers and are leavin
 
 const COUNTERS = [
   { target: 69, label: 'Students', suffix: '' },
-  { target: 10, label: 'Staff', suffix: '' },
+  { target: 20, label: 'Staff', suffix: '' },
   { target: 3, label: 'Years', suffix: '' },
   { target: null, label: 'Memories', suffix: '∞' },
 ];

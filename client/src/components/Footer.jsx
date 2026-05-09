@@ -23,7 +23,7 @@ export default function Footer() {
         {/* Left: Brand */}
         <div className="footer-brand">
           <h3 className="footer-chalk-title">Batch 2023–2026 🎓</h3>
-          <p className="footer-tagline">69 legends. 10 mentors. Infinite memories.</p>
+          <p className="footer-tagline">69 legends. 20 mentors. Infinite memories.</p>
         </div>
 
         {/* Center: Socials */}
