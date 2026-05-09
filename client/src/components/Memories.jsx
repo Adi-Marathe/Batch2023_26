@@ -9,18 +9,18 @@ const PASTEL_BG = [
 ];
 
 const STICKY_MESSAGES = [
-  { message: "3 years went by like 3 seconds. Will miss every chai break and every debug session. ☕", author: "— Aarav", color: "#FFE066" },
-  { message: "Remember that time the server crashed right before the demo? We fixed it in 2 minutes. Legends. 💪", author: "— Ananya", color: "#FFD6D6" },
-  { message: "To the best batch ever — you made even 8 AM lectures worth waking up for. Almost.", author: "— Arjun", color: "#D6FFF0" },
-  { message: "This batch taught me that code is better when written together. 💻❤️", author: "— Diya", color: "#EDD6FF" },
-  { message: "I'll carry these memories in my cache — they'll never be cleared. 🧠", author: "— Ethan", color: "#D6F0FF" },
-  { message: "From 'Hello World' to 'Goodbye College' — what a journey. 🚀", author: "— Fatima", color: "#FFE8D6" },
-  { message: "The WiFi was slow, but the friendships were fast. Miss you all already.", author: "— Gautam", color: "#FFE066" },
-  { message: "Best debugging partners anyone could ask for. You're all 200 OK in my book. ✅", author: "— Harsh", color: "#D6FFF0" },
-  { message: "Every error was a lesson, every success was a celebration. Here's to us! 🥂", author: "— Isha", color: "#FFD6D6" },
-  { message: "Keep pushing commits, keep pushing forward. The world isn't ready for us. 🌍", author: "— Jay", color: "#EDD6FF" },
-  { message: "No amount of git revert can undo these memories. And I wouldn't want to. 🖤", author: "— Kavya", color: "#D6F0FF" },
-  { message: "To the staff who believed in us before we believed in ourselves — thank you. 🙏", author: "— Lakshya", color: "#FFE8D6" },
+  { message: "3 years went by like 3 seconds. Will miss every chai break and every debug session. ☕", author: "— Aditya", color: "#FFE066" },
+  { message: "Remember that time the server crashed right before the demo? We fixed it in 2 minutes. Legends. 💪", author: "— Rudransh", color: "#FFD6D6" },
+  { message: "To the best batch ever — you made even 8 AM lectures worth waking up for. Almost.", author: "— Rushikesh", color: "#D6FFF0" },
+  { message: "This batch taught me that code is better when written together. 💻❤️", author: "— Shruti", color: "#EDD6FF" },
+  { message: "I'll carry these memories in my cache — they'll never be cleared. 🧠", author: "— Saurabh", color: "#D6F0FF" },
+  { message: "From 'Hello World' to 'Goodbye College' — what a journey. 🚀", author: "— Khushi", color: "#FFE8D6" },
+  { message: "The WiFi was slow, but the friendships were fast. Miss you all already.", author: "— Yash", color: "#FFE066" },
+  { message: "Best debugging partners anyone could ask for. You're all 200 OK in my book. ✅", author: "— Vedant", color: "#D6FFF0" },
+  { message: "Every error was a lesson, every success was a celebration. Here's to us! 🥂", author: "— Poonam", color: "#FFD6D6" },
+  { message: "Keep pushing commits, keep pushing forward. The world isn't ready for us. 🌍", author: "— Girish", color: "#EDD6FF" },
+  { message: "No amount of git revert can undo these memories. And I wouldn't want to. 🖤", author: "— Nikita", color: "#D6F0FF" },
+  { message: "To the staff who believed in us before we believed in ourselves — thank you. 🙏", author: "— Asawari", color: "#FFE8D6" },
 ];
 
 const WASHI_COLORS = ['var(--yellow)', 'var(--coral)', 'var(--mint)', 'var(--lavender)', 'var(--sky)'];

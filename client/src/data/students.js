@@ -26,7 +26,7 @@ import KalyaniKedare from '../assets/images/Friends/Kalyani Kedare/Kalyani Kedar
 import YashKumawat from '../assets/images/Friends/Yash Kumawat/Yash Kumawat 1.jpeg';
 import PriyankaLekruvale from '../assets/images/Friends/Priyanka Lekruvale/Priyanka Lekruvale 1.jpeg';
 import OmMandavgad from '../assets/images/Friends/Om Mandavgad/Om Mandavgad 1.png';
-import AdityaMarathe from '../assets/images/Friends/Aditya Marathe/Aditya Marathe 2.jpeg';
+import AdityaMarathe from '../assets/images/Friends/Aditya Marathe/Aditya Marathe 1.png';
 import TejasMhaske from '../assets/images/Friends/Tejas Mhaske/Tejas Mhaske 1.png';
 import YashMule from '../assets/images/Friends/Yash Mule/Yash Mule 1.png';
 import OmNalawade from '../assets/images/Friends/Om Nalawade/Om Nalawade 1.jpeg';
@@ -73,7 +73,7 @@ const students = [
   { id: 5, name: "Kalyani Babasaheb Bargal", rollNo: 5, enrollmentNo: "23511690127", photo: KalyaniBargal },
   { id: 6, name: "Gitanjali Ganesh Bodkhe", rollNo: 6, enrollmentNo: "23511690128", photo: GitanjaliBodkhe },
   { id: 7, name: "Vaishnavi Khanderao Borde", rollNo: 7, enrollmentNo: "23511690129", photo: VaishnaviBorde },
-  { id: 8, name: "Asavari Ajay Dalvi", rollNo: 8, enrollmentNo: "23511690131", photo: AsavariDalvi },
+  { id: 8, name: "Asawari Ajay Dalvi", rollNo: 8, enrollmentNo: "23511690131", photo: AsavariDalvi },
   { id: 9, name: "Khushi Shivaji Dalvi", rollNo: 9, enrollmentNo: "23511690132", photo: KhushiDalvi },
   { id: 10, name: "Vaishnavi Navnath Gaikwad", rollNo: 10, enrollmentNo: "23511690133", photo: VaishnaviGaikwad },
   { id: 11, name: "Rudransh Rahul Gawande", rollNo: 11, enrollmentNo: "23511690134", photo: RudranshGawande },
