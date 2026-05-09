@@ -65,7 +65,7 @@ export default function StudentProfile() {
     { icon: <IoCalendarOutline />, label: 'Date of Birth', value: profileData?.dob || 'Still calculating their age 🧮' },
     { icon: <IoLocationOutline />, label: 'Hometown', value: profileData?.city || student.city || 'Lost in the wilderness 🏕️' },
     { icon: <IoChatbubbleOutline />, label: 'Core Memory', value: profileData?.coreMemory || 'Awaiting student\'s entry... ✨' },
-    { icon: <IoRocketOutline />, label: 'Current Status', value: profileData?.currentStatus || 'Awaiting update... 🚀' },
+    { icon: <IoRocketOutline />, label: `Current Status ${profileData?.updatedAt ? `(Updated: ${new Date(profileData.updatedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })})` : ''}`, value: profileData?.currentStatus || 'Awaiting update... 🚀' },
     { icon: <IoRocketOutline />, label: 'Dream', value: profileData?.dream || student.dream || 'Awaiting update... 🎯' },
     { icon: <IoChatbubbleOutline />, label: 'College Life in 3 Emojis', value: profileData?.emojis || 'Awaiting update... 🤪' },
   ];

@@ -1,29 +1,17 @@
 import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import './Memories.css';
 import { MEMORIES } from '../data/memories';
+import students from '../data/students';
 
 const PASTEL_BG = [
   'var(--pastel-yellow)', 'var(--pastel-coral)', 'var(--pastel-mint)',
   'var(--pastel-lavender)', 'var(--pastel-sky)',
 ];
 
-const STICKY_MESSAGES = [
-  { message: "3 years went by like 3 seconds. Will miss every chai break and every debug session. ☕", author: "— Aditya", color: "#FFE066" },
-  { message: "Remember that time the server crashed right before the demo? We fixed it in 2 minutes. Legends. 💪", author: "— Rudransh", color: "#FFD6D6" },
-  { message: "To the best batch ever — you made even 8 AM lectures worth waking up for. Almost.", author: "— Rushikesh", color: "#D6FFF0" },
-  { message: "This batch taught me that code is better when written together. 💻❤️", author: "— Shruti", color: "#EDD6FF" },
-  { message: "I'll carry these memories in my cache — they'll never be cleared. 🧠", author: "— Saurabh", color: "#D6F0FF" },
-  { message: "From 'Hello World' to 'Goodbye College' — what a journey. 🚀", author: "— Khushi", color: "#FFE8D6" },
-  { message: "The WiFi was slow, but the friendships were fast. Miss you all already.", author: "— Yash", color: "#FFE066" },
-  { message: "Best debugging partners anyone could ask for. You're all 200 OK in my book. ✅", author: "— Devesh", color: "#D6FFF0" },
-  { message: "Every error was a lesson, every success was a celebration. Here's to us! 🥂", author: "— Poonam", color: "#FFD6D6" },
-  { message: "Keep pushing commits, keep pushing forward. The world isn't ready for us. 🌍", author: "— Girish", color: "#EDD6FF" },
-  { message: "No amount of git revert can undo these memories. And I wouldn't want to. 🖤", author: "— Nikita", color: "#D6F0FF" },
-  { message: "To the staff who believed in us before we believed in ourselves — thank you. 🙏", author: "— Asawari", color: "#FFE8D6" },
-];
-
 const WASHI_COLORS = ['var(--yellow)', 'var(--coral)', 'var(--mint)', 'var(--lavender)', 'var(--sky)'];
+const NOTE_COLORS = ["#FFE066", "#FFD6D6", "#D6FFF0", "#EDD6FF", "#D6F0FF", "#FFE8D6"];
 
 // ── Memoized Filmstrip Item ──
 // Videos show a static thumbnail (NO autoPlay) to save bandwidth.
@@ -91,6 +79,64 @@ export default function Memories() {
   const navigate = useNavigate();
   const [bannerVisible, setBannerVisible] = useState(false);
   const bannerRef = useRef(null);
+
+  const [messages, setMessages] = useState(() => {
+    const saved = localStorage.getItem('wallMessages_v2');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [newMessageText, setNewMessageText] = useState('');
+
+  const currentUserEnrollmentNo = localStorage.getItem('userEnrollmentNo');
+
+  const handleStickIt = (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    const enrollmentNo = localStorage.getItem('userEnrollmentNo');
+
+    if (!token || !enrollmentNo) {
+      toast.error('Only logged in users can stick messages!');
+      return;
+    }
+
+    if (messages.some(msg => msg.enrollmentNo === enrollmentNo)) {
+      toast.error('You can only stick one message to the wall!');
+      return;
+    }
+
+    if (!newMessageText.trim()) return;
+
+    const user = students.find(s => s.enrollmentNo === enrollmentNo);
+    let authorName = 'Unknown';
+    if (user && user.name) {
+      const nameParts = user.name.split(' ').filter(Boolean);
+      authorName = nameParts.length > 1 
+        ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}` 
+        : nameParts[0] || 'Unknown';
+    }
+
+    const randomColor = NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)];
+
+    const newMessage = {
+      id: Date.now().toString(),
+      message: newMessageText,
+      author: `— ${authorName}`,
+      color: randomColor,
+      enrollmentNo: enrollmentNo,
+    };
+
+    const updatedMessages = [...messages, newMessage];
+    setMessages(updatedMessages);
+    localStorage.setItem('wallMessages_v2', JSON.stringify(updatedMessages));
+    setNewMessageText('');
+    toast.success('Message stuck to the wall!');
+  };
+
+  const handleDeleteMessage = (id) => {
+    const updatedMessages = messages.filter(msg => msg.id !== id);
+    setMessages(updatedMessages);
+    localStorage.setItem('wallMessages_v2', JSON.stringify(updatedMessages));
+    toast.success('Message removed from the wall!');
+  };
 
   // Memoize rows so they aren't recomputed every render
   const [row1, row2] = useMemo(() => {
@@ -165,15 +211,43 @@ export default function Memories() {
         {/* Message Wall */}
         <div className="message-wall">
           <h3 className="message-wall-title">💌 Message Wall</h3>
+          
           <div className="sticky-notes-grid">
-            {STICKY_MESSAGES.map((note, i) => (
-              <div key={i} className="sticky-note" style={{ background: note.color, transform: `rotate(${((i * 7) % 11) - 5}deg)` }}>
+            {messages.map((note, i) => (
+              <div key={note.id || i} className="sticky-note" style={{ background: note.color, transform: `rotate(${((i * 7) % 11) - 5}deg)` }}>
                 {i % 3 === 0 && <div className="sticky-note-tape" style={{ background: WASHI_COLORS[i % WASHI_COLORS.length] }} />}
+                
+                {note.enrollmentNo === currentUserEnrollmentNo && (
+                  <button 
+                    className="delete-note-btn" 
+                    onClick={() => handleDeleteMessage(note.id)}
+                    title="Remove your message"
+                  >
+                    ×
+                  </button>
+                )}
+                
                 <p className="sticky-note-message">{note.message}</p>
                 <p className="sticky-note-author">{note.author}</p>
               </div>
             ))}
           </div>
+
+          <form className="message-wall-form" onSubmit={handleStickIt}>
+            <div className="message-wall-input-header">
+              {newMessageText.length} / 300 characters
+            </div>
+            <textarea
+              className="message-wall-input"
+              placeholder="Write a memory or message..."
+              value={newMessageText}
+              onChange={(e) => setNewMessageText(e.target.value)}
+              rows={3}
+              maxLength={300}
+              required
+            />
+            <button type="submit" className="message-wall-btn">Stick it</button>
+          </form>
         </div>
 
         <div className="memories-banner" ref={bannerRef}>

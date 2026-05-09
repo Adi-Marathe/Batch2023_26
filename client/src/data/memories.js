@@ -80,6 +80,8 @@ import mem79 from '../assets/images/Memories/TY Traditional Day 3.jpeg';
 import mem80 from '../assets/images/Memories/TY Traditional Day.jpeg';
 import mem81 from '../assets/images/Memories/TY Traditional Day.jpg';
 import mem82 from '../assets/images/Memories/TY.mp4';
+import mem83 from '../assets/images/Memories/Fun moment.mp4';
+import mem84 from '../assets/images/Memories/Last day of clg.jpeg';
 
 export const MEMORIES = [
   { id: 1, title: '3 Queen Of Department', media: mem1, type: 'image' },
@@ -164,4 +166,6 @@ export const MEMORIES = [
   { id: 80, title: 'TY Traditional Day ✨', media: mem80, type: 'image' },
   { id: 81, title: 'TY Traditional Day ✨', media: mem81, type: 'image' },
   { id: 82, title: 'TY', media: mem82, type: 'video' },
+  { id: 83, title: 'Fun moment 😂', media: mem83, type: 'video' },
+  { id: 84, title: 'Last day of clg 🥺', media: mem84, type: 'image' },
 ];
