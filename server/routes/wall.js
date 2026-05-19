@@ -23,7 +23,14 @@ const authenticate = (req, res, next) => {
 // GET /api/wall — Fetch all messages (public, no auth required)
 router.get('/', async (req, res) => {
   try {
-    const messages = await WallMessage.find().sort({ createdAt: -1 });
+    // .lean() = plain objects, ~3x faster; select only needed fields
+    const messages = await WallMessage.find()
+      .sort({ createdAt: -1 })
+      .select('enrollmentNo authorName message color createdAt')
+      .lean();
+    
+    // Cache for 30 seconds — messages update infrequently
+    res.set('Cache-Control', 'public, max-age=30');
     res.json(messages);
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error' });
@@ -39,11 +46,8 @@ router.post('/', authenticate, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Message is required' });
     }
 
-
-
-
     // Check if user already has a message
-    const existing = await WallMessage.findOne({ enrollmentNo: req.enrollmentNo });
+    const existing = await WallMessage.findOne({ enrollmentNo: req.enrollmentNo }).lean();
     if (existing) {
       return res.status(409).json({ success: false, message: 'You can only stick one message to the wall!' });
     }
@@ -68,7 +72,7 @@ router.post('/', authenticate, async (req, res) => {
 // DELETE /api/wall/:id — Delete own message (auth required)
 router.delete('/:id', authenticate, async (req, res) => {
   try {
-    const msg = await WallMessage.findById(req.params.id);
+    const msg = await WallMessage.findById(req.params.id).lean();
     if (!msg) {
       return res.status(404).json({ success: false, message: 'Message not found' });
     }

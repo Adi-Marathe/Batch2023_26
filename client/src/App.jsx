@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Loader from './components/Loader';
@@ -6,12 +6,37 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Students from './components/Students';
 import Staff from './components/Staff';
-import Memories from './components/Memories';
 import Footer from './components/Footer';
-import StudentProfile from './components/StudentProfile';
-import StaffProfile from './components/StaffProfile';
-import MediaViewer from './components/MediaViewer';
 import './App.css';
+
+// ═══════════════════════════════════════════
+//  LAZY LOAD — Route-level code splitting
+//  These components are only downloaded when
+//  the user navigates to their route.
+//  Reduces initial bundle size significantly.
+// ═══════════════════════════════════════════
+const Memories = lazy(() => import('./components/Memories'));
+const StudentProfile = lazy(() => import('./components/StudentProfile'));
+const StaffProfile = lazy(() => import('./components/StaffProfile'));
+const MediaViewer = lazy(() => import('./components/MediaViewer'));
+
+// Minimal fallback for lazy-loaded routes
+function RouteFallback() {
+  return (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '60vh',
+      fontFamily: 'var(--font-body)',
+      fontSize: '1.2rem',
+      color: 'var(--ink)',
+      opacity: 0.5,
+    }}>
+      Loading...
+    </div>
+  );
+}
 
 function HomePage() {
   return (
@@ -19,7 +44,9 @@ function HomePage() {
       <Hero />
       <Students />
       <Staff />
-      <Memories />
+      <Suspense fallback={<RouteFallback />}>
+        <Memories />
+      </Suspense>
       <Footer />
     </>
   );
@@ -283,12 +310,14 @@ export default function App() {
         {!loading && (
           <div className="app-content">
             <Navbar />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/student/:id" element={<StudentProfile />} />
-              <Route path="/staff/:id" element={<StaffProfile />} />
-              <Route path="/flashback/:id" element={<MediaViewer />} />
-            </Routes>
+            <Suspense fallback={<RouteFallback />}>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/student/:id" element={<StudentProfile />} />
+                <Route path="/staff/:id" element={<StaffProfile />} />
+                <Route path="/flashback/:id" element={<MediaViewer />} />
+              </Routes>
+            </Suspense>
           </div>
         )}
       </div>

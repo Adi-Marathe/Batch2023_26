@@ -1,20 +1,37 @@
-import { useState } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import studentsData from '../data/students';
 import StudentCard from './StudentCard';
 import './Students.css';
 
+// Debounce hook — delays filtering until user stops typing (300ms)
+// Prevents re-rendering 69 cards on every keystroke
+function useDebouncedValue(value, delay = 300) {
+  const [debounced, setDebounced] = useState(value);
+  const timer = useRef(null);
+  
+  useEffect(() => {
+    timer.current = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer.current);
+  }, [value, delay]);
+  
+  return debounced;
+}
+
 export default function Students() {
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebouncedValue(search, 250);
 
-  const filtered = studentsData.filter(s => {
-    const term = search.toLowerCase();
-    return (
+  // Memoize filtered list — only recomputes when debounced search changes
+  const filtered = useMemo(() => {
+    if (!debouncedSearch) return studentsData;
+    const term = debouncedSearch.toLowerCase();
+    return studentsData.filter(s => (
       (s.name && String(s.name).toLowerCase().includes(term)) ||
       (s.rollNo && String(s.rollNo).toLowerCase().includes(term)) ||
       (s.city && String(s.city).toLowerCase().includes(term)) ||
       (s.enrollmentNo && String(s.enrollmentNo).toLowerCase().includes(term))
-    );
-  });
+    ));
+  }, [debouncedSearch]);
 
   return (
     <section className="students" id="students">
