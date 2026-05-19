@@ -1,16 +1,12 @@
+import ArchanaPande from '../assets/images/Staff/archana_pande.jpeg';
+import AshwiniSase from '../assets/images/Staff/ashwini_sase.jpeg';
+import MadhuriBorse from '../assets/images/Staff/madhuri_borse.jpeg';
+import KhushiBharuka from '../assets/images/Staff/khushi_bharuka.jpeg';
+
 const AWAITING = 'Awaiting student responses... 📝';
 const AWAITING_ADVICE = '"Awaiting student responses... 📝"';
 
 const staff = [
-  {
-    id: 1,
-    name: 'Hon. Shri Prassana Patil',
-    designation: 'Secretary',
-    subject: '',
-    photo: '',
-    knownFor: AWAITING,
-    advice: AWAITING_ADVICE,
-  },
   {
     id: 2,
     name: 'Dr. A. M. Chaudhari',
@@ -43,7 +39,7 @@ const staff = [
     name: 'Prof. Madhuri Borse',
     designation: 'Professor',
     subject: 'Linux Basic, Database Management System, Java Programming, Operating System, Emerging Trends in Computer Engineering',
-    photo: '',
+    photo: MadhuriBorse,
     knownFor: AWAITING,
     advice: AWAITING_ADVICE,
   },
@@ -52,7 +48,7 @@ const staff = [
     name: 'Prof. Khushi Bharuka',
     designation: 'Associate Professor',
     subject: 'Web Page Design, Digital Techniques, Microprocessor Programming, Python Programming, Machine Learning',
-    photo: '',
+    photo: KhushiBharuka,
     knownFor: AWAITING,
     advice: AWAITING_ADVICE,
   },
@@ -61,7 +57,7 @@ const staff = [
     name: 'Prof. Archana Pande',
     designation: 'Associate Professor',
     subject: 'OOPs using C++, Data Communication and Computer Networks, Data Analytics, Android Development',
-    photo: '',
+    photo: ArchanaPande,
     knownFor: AWAITING,
     advice: AWAITING_ADVICE,
   },
@@ -70,7 +66,7 @@ const staff = [
     name: 'Prof. Ashwani Sase',
     designation: 'Associate Professor',
     subject: 'Programming in C',
-    photo: '',
+    photo: AshwiniSase,
     knownFor: AWAITING,
     advice: AWAITING_ADVICE,
   },
@@ -140,7 +136,7 @@ const staff = [
   {
     id: 16,
     name: 'Pawar Miss',
-    designation: 'Clerk',
+    designation: 'Accountant',
     subject: '',
     photo: '',
     knownFor: AWAITING,
@@ -149,7 +145,7 @@ const staff = [
   {
     id: 17,
     name: 'Pawar Sir',
-    designation: 'Clerk',
+    designation: 'Accountant',
     subject: '',
     photo: '',
     knownFor: AWAITING,
