@@ -26,7 +26,7 @@ import KalyaniKedare from '../assets/images/Friends/Kalyani Kedare/Kalyani Kedar
 import YashKumawat from '../assets/images/Friends/Yash Kumawat/Yash Kumawat 1.jpeg';
 import PriyankaLekruvale from '../assets/images/Friends/Priyanka Lekruvale/Priyanka Lekruvale 1.jpeg';
 import OmMandavgad from '../assets/images/Friends/Om Mandavgad/Om Mandavgad 1.png';
-import AdityaMarathe from '../assets/images/Friends/Aditya Marathe/Aditya Marathe 1.png';
+import AdityaMarathe from '../assets/images/Friends/Aditya Marathe/Aditya Marathe 1.jpeg';
 import TejasMhaske from '../assets/images/Friends/Tejas Mhaske/Tejas Mhaske 1.png';
 import YashMule from '../assets/images/Friends/Yash Mule/Yash Mule 1.png';
 import OmNalawade from '../assets/images/Friends/Om Nalawade/Om Nalawade 1.jpeg';
