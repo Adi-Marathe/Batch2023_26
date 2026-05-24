@@ -1,7 +1,5 @@
 # 🎓 Digital Yearbook (Batch 2023-26)
 
-A fully responsive, interactive, and beautifully designed digital yearbook application for the Batch of 2023-26. Built with a playful, handwritten doodle theme, this platform immortalizes student and staff memories, offering interactive profiles, a media flashback gallery, and a message wall.
-
 ## 🌟 Overview
 
 The Digital Yearbook is designed to be a digital repository of memories. Unlike a traditional printed yearbook, this interactive application brings memories to life with smooth animations, dynamic content, and an engaging doodle-style aesthetic.
